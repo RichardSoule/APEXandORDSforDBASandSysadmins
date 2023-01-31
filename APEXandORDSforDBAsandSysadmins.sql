@@ -504,7 +504,7 @@ systemctl daemon-reload
 
 -- Manage ORDS Service – Enable and Start
 [root@applicationserver ~]
-systemctl enable ords  Start ORDS on server reboot (optional)
+systemctl enable ords 
 
 
 [root@applicationserver ~]
@@ -520,3 +520,100 @@ journalctl -u ords.service
 
 [root@applicationserver ~]
 systemctl stop ords
+                                          
+-- Create ords OS User and Change Ownerships
+[root@applicationserver ~]
+systemctl stop ords
+[root@applicationserver ~]
+useradd ords
+[root@applicationserver ~]
+chown -R ords:ords /etc/ords
+[root@applicationserver ~]
+chown -R ords:ords /opt/ords
+
+-- Modify ORDS systemd Service to Use ords OS User
+[root@applicationserver /etc/systemd/system]
+vim ords.service
+                                          
+[root@applicationserver /etc/systemd/system]
+cat ords.service
+                                          
+[Unit]
+Description=Oracle REST Data Services
+Requires=network.target
+[Service]
+Type=simple
+ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/latest serve
+ExecStop=/usr/bin/kill -HUP ${MAINPID}
+User=ords
+SyslogIdentifier=ords
+Restart=always
+RestartSec=30
+TimeoutStartSec=30
+TimeoutStopSec=30
+[Install]
+WantedBy=multi-user.target
+
+-- Create firewalld Service
+[root@applicationserver /etc/firewalld/services]
+vim ords.xml
+
+[root@applicationserver /etc/firewalld/services]
+cat ords.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>ORDS</short>
+  <description>Oracle REST Databse Service</description>
+  <port protocol="tcp" port="443"/>
+  <port protocol="tcp" port="8080"/>
+</service>
+
+[root@applicationserver /etc/firewalld/services]
+firewall-cmd --permanent --add-service ords
+
+-- Create firewalld Forward from 443 to 8080
+[root@applicationserver ~]
+firewall-cmd --add-forward-port=port=443:proto=tcp:toport=8080
+
+[root@applicationserver ~]
+firewall-cmd --runtime-to-permanent
+
+[root@applicationserver ~]
+firewall-cmd --add-masquerade 
+
+-- Update the Port that ORDS Uses
+[root@applicationserver /etc/ords/latest/global]
+vim settings.xml
+
+[root@applicationserver /etc/ords/latest/global]
+cat settings.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Saved on Fri Jan 06 23:26:37 UTC 2023</comment>
+<entry key="database.api.enabled">true</entry>
+<entry key="standalone.context.path">/app</entry>
+<entry key="standalone.doc.root">/var/www/html</entry>
+<entry key="standalone.https.host">applicationserver.insum.ca</entry>
+<entry key="standalone.https.port">8080</entry>
+<entry key="standalone.static.context.path">/i</entry>
+<entry key="standalone.static.path">/var/www/html/i/</entry>
+<entry key="jdbc.MinLimit">12</entry>
+<entry key="jdbc.InitialLimit">12</entry>
+<entry key="jdbc.MaxLimit">12</entry>
+</properties>
+
+-- Start ODS & firewalld and Secure the ords Account
+[root@applicationserver ~]
+systemctl start ords
+
+[root@applicationserver ~]
+systemctl start firewalld
+
+[root@applicationserver ~]
+usermod -s /usr/sbin/nologin ords
+ 
+[root@applicationserver ~]
+su - ords
