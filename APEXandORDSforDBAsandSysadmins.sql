@@ -171,7 +171,7 @@ commit;
 vim GlobalSignRootCA-R1.cer
 
 [oracle@oracleserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
-orapki wallet add -wallet . -trusted_cert -cert GlobalSignRootCA-R1.cert
+orapki wallet add -wallet . -trusted_cert -cert GlobalSignRootCA-R1.cer
 
 [oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
 orapki wallet display -wallet .
