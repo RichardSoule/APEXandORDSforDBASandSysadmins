@@ -75,14 +75,14 @@ select tablespace_name                                         as "Tablespace Na
   join tablespace_bytes_free
  using (tablespace_name);
 
--- Download and Extract Oracle APEX
+-- Download and extract APEX
 [oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
 wget https://download.oracle.com/otn_software/apex/apex_22.2.zip
 
 [oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
 unzip -q apex_22.2.zip
 
--- Install APEX Component in a Pluggable Database
+-- Install APEX component in a pluggable database
 [oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2/apex]
 sqlplus sys@orcl as sysdba
 @apexins sysaux sysaux temp /i/
@@ -90,6 +90,7 @@ exit
 
 -- What does the database now tell us about APEX?
 -- What does the database now tell us about APEX?
+-- There are two different versions of this slide, all statements are below
 select *
   from apex_release;
 
@@ -97,6 +98,13 @@ info apex_release
 
 select * 
   from apex_patches;
+
+select comp_name
+     , version
+     , version_full
+  from dba_registry
+ where comp_ID='APEX';
+
 
 -- Get the latest APEX Patch
 [oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
@@ -161,12 +169,44 @@ ls
 [oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
 orapki wallet display -wallet .
 
--- Configure APEX component TLS Wallet location
+-- Configure APEX component TLS wallet location
 sqlplus sys@orcl as sysdba
 exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/dbacon/tls_wallet');
 commit; 
 
 -- Add a root certificate into the wallet
+-----BEGIN CERTIFICATE-----
+MIIFVzCCAz+gAwIBAgINAgPlk28xsBNJiGuiFzANBgkqhkiG9w0BAQwFADBHMQsw
+CQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2VzIExMQzEU
+MBIGA1UEAxMLR1RTIFJvb3QgUjEwHhcNMTYwNjIyMDAwMDAwWhcNMzYwNjIyMDAw
+MDAwWjBHMQswCQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZp
+Y2VzIExMQzEUMBIGA1UEAxMLR1RTIFJvb3QgUjEwggIiMA0GCSqGSIb3DQEBAQUA
+A4ICDwAwggIKAoICAQC2EQKLHuOhd5s73L+UPreVp0A8of2C+X0yBoJx9vaMf/vo
+27xqLpeXo4xL+Sv2sfnOhB2x+cWX3u+58qPpvBKJXqeqUqv4IyfLpLGcY9vXmX7w
+Cl7raKb0xlpHDU0QM+NOsROjyBhsS+z8CZDfnWQpJSMHobTSPS5g4M/SCYe7zUjw
+TcLCeoiKu7rPWRnWr4+wB7CeMfGCwcDfLqZtbBkOtdh+JhpFAz2weaSUKK0Pfybl
+qAj+lug8aJRT7oM6iCsVlgmy4HqMLnXWnOunVmSPlk9orj2XwoSPwLxAwAtcvfaH
+szVsrBhQf4TgTM2S0yDpM7xSma8ytSmzJSq0SPly4cpk9+aCEI3oncKKiPo4Zor8
+Y/kB+Xj9e1x3+naH+uzfsQ55lVe0vSbv1gHR6xYKu44LtcXFilWr06zqkUspzBmk
+MiVOKvFlRNACzqrOSbTqn3yDsEB750Orp2yjj32JgfpMpf/VjsPOS+C12LOORc92
+wO1AK/1TD7Cn1TsNsYqiA94xrcx36m97PtbfkSIS5r762DL8EGMUUXLeXdYWk70p
+aDPvOmbsB4om3xPXV2V4J95eSRQAogB/mqghtqmxlbCluQ0WEdrHbEg8QOB+DVrN
+VjzRlwW5y0vtOUucxD/SVRNuJLDWcfr0wbrM7Rv1/oFB2ACYPTrIrnqYNxgFlQID
+AQABo0IwQDAOBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4E
+FgQU5K8rJnEaK0gnhS9SZizv8IkTcT4wDQYJKoZIhvcNAQEMBQADggIBAJ+qQibb
+C5u+/x6Wki4+omVKapi6Ist9wTrYggoGxval3sBOh2Z5ofmmWJyq+bXmYOfg6LEe
+QkEzCzc9zolwFcq1JKjPa7XSQCGYzyI0zzvFIoTgxQ6KfF2I5DUkzps+GlQebtuy
+h6f88/qBVRRiClmpIgUxPoLW7ttXNLwzldMXG+gnoot7TiYaelpkttGsN/H9oPM4
+7HLwEXWdyzRSjeZ2axfG34arJ45JK3VmgRAhpuo+9K4l/3wV3s6MJT/KYnAK9y8J
+ZgfIPxz88NtFMN9iiMG1D53Dn0reWVlHxYciNuaCp+0KueIHoI17eko8cdLiA6Ef
+MgfdG+RCzgwARWGAtQsgWSl4vflVy2PFPEz0tv/bal8xa5meLMFrUKTX5hgUvYU/
+Z6tGn6D/Qqc6f1zLXbBwHSs09dR2CQzreExZBfMzQsNhFRAbd03OIozUhfJFfbdT
+6u9AWpQKXCBfTkBdYiJ23//OYb2MI3jSNwLgjt7RETeJ9r/tSQdirpLsQBqvFAnZ
+0E6yove+7u7Y/9waLd64NnHi/Hm3lCXRSHNboTXns5lndcEZOitHTtNCjv0xyBZm
+2tIMPNuzjsmhDYAPexZ3FL//2wmUspO8IFgV6dtxQ/PeEMMA3KgqlbbC1j+Qa3bb
+bP6MvPJwNQzcmRk13NfIRmPVNnGuV/u3gm3c
+-----END CERTIFICATE-----
+
 [oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
 vim GlobalSignRootCA-R1.cer
 
@@ -189,6 +229,12 @@ end;
 /
 
 -- Unlocking and creating new accounts?
+select profile
+     , limit
+ from dba_profiles
+where profile = 'DEFAULT'
+  and resource_name = 'PASSWORD_LIFE_TIME';
+
 [oracle@databaseserver DB:dbacon ~]
 sqlplus sys@orcl as sysdba
 alter profile default limit password_life_time unlimited;
@@ -201,14 +247,14 @@ alter user apex_public_user identified by oracle_4U account unlock;
 wget https://download.oracle.com/otn_software/java/ords/ords-latest.zip
 
 [root@applicationserver /usr/local/src/oracle/ords]
-mv ords-latest.zip ords-22.4.zip
+mv ords-latest.zip ords-22.4.3.zip
 
 -- ORDS Directories
 [root@applicationserver ~]
-mkdir -p /opt/ords/22.4
+mkdir -p /opt/ords/22.4.3
 
 [root@applicationserver ~]
-mkdir -p /etc/ords/22.4
+mkdir -p /etc/ords/22.4.3
 
 [root@applicationserver ~]
 mkdir -p /var/www/html/i   
@@ -233,22 +279,22 @@ https://static.oracle.com/cdn/apex/22.2.0/
 # \cp -R /usr/local/src/oracle/apex/34628174/images/* . 
                                                             */ -- Ignore this line, it's to make stuff pretty in VSCode
 -- Create ORDS Runtime
-[root@applicationserver /opt/ords/22.4]
+[root@applicationserver /opt/ords/22.4.3]
 unzip -q /usr/local/src/oracle/ords/ords-22.4zip
 
-[root@applicationserver /opt/ords/22.4]
+[root@applicationserver /opt/ords/22.4.3]
 ll
 
--- ORDS Runtime 
-[root@applicationserver /opt/ords/22.4]
+-- ORDS runtime details
+[root@applicationserver /opt/ords/22.4.3]
 tree bin
 
-[root@applicationserver /opt/ords/22.4]
+[root@applicationserver /opt/ords/22.4.3]
 tree scripts
 
 -- Configure ORDS & Configure ORDS (continued)
-[root@applicationserver /opt/ords/22.4/bin]
-./ords --config /etc/ords/22.4 install
+[root@applicationserver /opt/ords/22.4.3/bin]
+./ords --config /etc/ords/22.4.3 install
 2
 1
 databaseserver.insum.ca
@@ -266,13 +312,13 @@ applicationserver.insum.ca
 
 -- What happened in our configuration directory?
 [root@applicationserver ~]
-tree /etc/ords/22.4
+tree /etc/ords/22.4.3
 
 -- What is in settings.xml?
 [root@applicationserver /etc/ords/22.4/global]
 cat settings.xml
 
--- Create an admin user and password
+-- Create an APEX admin user and password
 [oracle@oracleserver DB:dbacon /usr/local/src/oracle/apex/22.2/apex]
 sqlplus sys@orcl as sysdba 
 @paxchpwd
@@ -302,13 +348,13 @@ cat settings.xml
 -- Configure ORDS directories to be more maintainable
    -- Today
 [root@applicationserver /etc/ords]
-ln -s 22.4 latest
+ln -s 22.4.3 latest
 
 [root@applicationserver /etc/ords]
 cd /opt/ords
 
 [root@applicationserver /opt/ords]
-ln -s 22.4 latest
+ln -s 22.4.3 latest
    -- At some point in the future
 [root@applicationserver /etc/ords]
 unlink latest
@@ -325,7 +371,7 @@ unlink latest
 [root@applicationserver /opt/ords]
 ln -s 23.1 latest
 
--- Restart & Monitor ORDS (simple mode)
+-- Restart & monitor ORDS (simple mode)
 [root@applicationserver ~]
 nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> ords.log 2>&1 &
 
@@ -348,8 +394,8 @@ tail -f ords.log
       or username like 'FLOWS%'
 order by username;
 
--- First REST Enable Schemas
-sqlplus sys as sysdba
+-- First REST enable schemas
+sql sys as sysdba
 create user rich identified by rich;
 create user bob identified by bob;
 grant dba to rich;
@@ -359,7 +405,7 @@ commit;
 exec ords_admin.enable_schema(p_schema => 'bob',p_url_mapping_pattern => 'coolguy');
 commit; 
 
--- What does the database tell us about REST Schemas?
+-- What does the database tell us about REST schemas?
 select parsing_schema
      , status
      , auto_rest_auth
@@ -369,13 +415,13 @@ select parsing_schema
   join dba_ords_url_mappings u 
     on s.url_mapping_id = u.id;
 
--- Pluggable Default Resource Plan During the Day
--- Pluggable Default Maintenance Resource Plan Nights & Weekends
-sqlplus sys as sysdba
+-- Pluggable default resource plan during the day
+-- Pluggable default maintenance resource plan nights & weekends
+sql sys as sysdba
 show parameter resource_manager_plan
 
 -- Let's make a new plan!
--- Create Consumer Groups
+   -- Create Consumer Groups
 begin
    dbms_resource_manager.clear_pending_area;
    dbms_resource_manager.create_pending_area;
@@ -389,7 +435,7 @@ begin
 end;
 /
  
--- Allow Consumer Groups Switching
+   -- Allow Consumer Groups Switching
 begin
     dbms_resource_manager_privs.grant_switch_consumer_group( grantee_name   => 'APEX_PUBLIC_USER'
                                                            , consumer_group => 'APEX_HIGH'
@@ -402,8 +448,9 @@ begin
                                                            , grant_option   => FALSE );
 end;
 /
-begin
+
    -- Build a Ratio Based Plan
+begin
    dbms_resource_manager.clear_pending_area;
    dbms_resource_manager.create_pending_area;
    dbms_resource_manager.create_plan( plan     => 'APEX_RATIO_PLAN'
@@ -435,7 +482,7 @@ begin
                                               , switch_time           => 1800  -- Sessions are canceled after 30 minutes
                                               , switch_for_call       => TRUE
                                               , switch_estimate       => FALSE );
- -- Add Regular Database Plan Directives to the Plan
+   -- Add Regular Database Plan Directives to the Plan
    dbms_resource_manager.create_plan_directive( plan                  => 'APEX_RATIO_PLAN'
                                               , group_or_subplan      => 'OTHER_GROUPS'
                                               , comment               => 'The mandatory group'
@@ -455,6 +502,7 @@ begin
    dbms_resource_manager.submit_pending_area;  
 end;
 /
+
 -- Update the maintenance scheduler windows to also run the new plan
 begin
   dbms_scheduler.set_attribute( name => 'MONDAY_WINDOW',    attribute => 'RESOURCE_PLAN', value => 'APEX_RATIO_PLAN' );
@@ -477,7 +525,7 @@ ps -ef | grep ords | grep -v grep
 [root@applicationserver ~]
 kill 1348575
 
--- Create ORDS Service
+-- Create ORDS service
 [root@applicationserver /etc/systemd/system]
 vim ords.service
 
@@ -502,26 +550,25 @@ WantedBy=multi-user.target
 [root@applicationserver ~]
 systemctl daemon-reload 
 
--- Manage ORDS Service – Enable and Start
+-- Manage ORDS service – enable and start
 [root@applicationserver ~]
 systemctl enable ords 
-
 
 [root@applicationserver ~]
 systemctl start ords
 
--- Manage ORDS Service - Status
+-- Manage ORDS service - status
 [root@applicationserver ~]
 systemctl status ords
 
--- Manage ORDS Service – Read Logs & Stop
+-- Manage ORDS service – read logs & stop
 [root@applicationserver ~]
 journalctl -u ords.service
 
 [root@applicationserver ~]
 systemctl stop ords
                                           
--- Create ords OS User and Change Ownerships
+-- Create ords OS user and change file ownership
 [root@applicationserver ~]
 systemctl stop ords
 [root@applicationserver ~]
@@ -531,30 +578,17 @@ chown -R ords:ords /etc/ords
 [root@applicationserver ~]
 chown -R ords:ords /opt/ords
 
--- Modify ORDS systemd Service to Use ords OS User
+-- Modify ORDS systemd service to use ords OS user
 [root@applicationserver /etc/systemd/system]
 vim ords.service
                                           
 [root@applicationserver /etc/systemd/system]
 cat ords.service
-                                          
-[Unit]
-Description=Oracle REST Data Services
-Requires=network.target
-[Service]
-Type=simple
-ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/latest serve
-ExecStop=/usr/bin/kill -HUP ${MAINPID}
+   --Note: Only the below line was changed
 User=ords
-SyslogIdentifier=ords
-Restart=always
-RestartSec=30
-TimeoutStartSec=30
-TimeoutStopSec=30
-[Install]
-WantedBy=multi-user.target
 
--- Create firewalld Service
+
+-- Create firewalld ORDS service
 [root@applicationserver /etc/firewalld/services]
 vim ords.xml
 
@@ -569,6 +603,31 @@ cat ords.xml
   <port protocol="tcp" port="8080"/>
 </service>
 
+   -- Note: Not on slides, but if you are running this on your DB server,
+   -- then you'll also need at least the database service, and maybe the
+   -- OEM agent service.
+
+[root@applicationserver /etc/firewalld/services]
+# cat oracle-database.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Oracle DB</short>
+  <description>Oracle Database service</description>
+  <port protocol="tcp" port="1521"/>
+</service>
+
+[root@applicationserver /etc/firewalld/services]
+# cat oracle-agent.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Oracle Agent</short>
+  <description>Oracle Agent service</description>
+  <port protocol="tcp" port="3872"/>
+</service>
+
+[root@applicationserver /etc/firewalld/services]
+systemctl start firewalld
+
 [root@applicationserver /etc/firewalld/services]
 firewall-cmd --permanent --add-service ords
 
@@ -582,33 +641,19 @@ firewall-cmd --runtime-to-permanent
 [root@applicationserver ~]
 firewall-cmd --add-masquerade 
 
--- Update the Port that ORDS Uses
+-- Update the port that ORDS uses
 [root@applicationserver /etc/ords/latest/global]
 vim settings.xml
 
 [root@applicationserver /etc/ords/latest/global]
 cat settings.xml
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-<comment>Saved on Fri Jan 06 23:26:37 UTC 2023</comment>
-<entry key="database.api.enabled">true</entry>
-<entry key="standalone.context.path">/app</entry>
-<entry key="standalone.doc.root">/var/www/html</entry>
-<entry key="standalone.https.host">applicationserver.insum.ca</entry>
+   -- Note: Only the below line is changed.
 <entry key="standalone.https.port">8080</entry>
-<entry key="standalone.static.context.path">/i</entry>
-<entry key="standalone.static.path">/var/www/html/i/</entry>
-<entry key="jdbc.MinLimit">12</entry>
-<entry key="jdbc.InitialLimit">12</entry>
-<entry key="jdbc.MaxLimit">12</entry>
-</properties>
 
--- Start ODS & firewalld and Secure the ords Account
-[root@applicationserver ~]
-systemctl start ords
+[root@applicationserver /etc/ords/latest/global]
+systemctl daemon-reload
 
+-- Secure the ords account & start ORDS
 [root@applicationserver ~]
 systemctl start firewalld
 
@@ -617,3 +662,6 @@ usermod -s /usr/sbin/nologin ords
  
 [root@applicationserver ~]
 su - ords
+
+[root@applicationserver ~]
+systemctl start ords
