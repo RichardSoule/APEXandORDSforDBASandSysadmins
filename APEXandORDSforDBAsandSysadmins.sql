@@ -267,16 +267,16 @@ https://static.oracle.com/cdn/apex/22.2.0/
 
 -- 2. Or deploy and patch APEX static images manually
 [root@applicationserver /var/www/html]
-# mkdir i
+mkdir i
 
 [root@applicationserver /var/www/html]
-# cd i
+cd i
 
 [root@applicationserver /var/www/html/i]
-# cp -R /usr/local/src/oracle/apex/22.2/apex/images/* .
+cp -R /usr/local/src/oracle/apex/22.2/apex/images/* .
                                                             */ -- Ignore this line, it's to make stuff pretty in VSCode
 [root@applicationserver /var/www/html/i]
-# \cp -R /usr/local/src/oracle/apex/34628174/images/* . 
+\cp -R /usr/local/src/oracle/apex/34628174/images/* . 
                                                             */ -- Ignore this line, it's to make stuff pretty in VSCode
 -- Create ORDS Runtime
 [root@applicationserver /opt/ords/22.4.3]
@@ -608,7 +608,7 @@ cat ords.xml
    -- OEM agent service.
 
 [root@applicationserver /etc/firewalld/services]
-# cat oracle-database.xml
+cat oracle-database.xml
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>Oracle DB</short>
@@ -617,7 +617,7 @@ cat ords.xml
 </service>
 
 [root@applicationserver /etc/firewalld/services]
-# cat oracle-agent.xml
+cat oracle-agent.xml
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>Oracle Agent</short>
