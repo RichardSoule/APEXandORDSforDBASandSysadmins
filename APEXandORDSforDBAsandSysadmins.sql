@@ -1,13 +1,15 @@
 -- APEX and ORDS for DBAs and Sysadmins
 -- by Rich Soule, Director of Consulting Services, Insum (rsoule@insum.ca)
--- Below are the sql, pl/sql and OS commands that are used within my
+-- Below are the SQL, PL/SQL and OS commands that are used within my
 -- presentation. You can search for the slide title and you'll find the content
 -- from that slide. For OS commands, I've included the directory that the 
--- command should be run in, but I've elimintad the prompt from the command to 
+-- command should be run in, but I've eliminated the prompt from the command to 
 -- make it easier to copy. So, instead of "$ ls" for the oracle user, or "# ls" 
 -- for the root user, I'll just have "ls". For SQL commands other than queries
 -- that need to be run from a specific directory, again I'll eliminate the
--- prompt characters so you can just copy the command.
+-- prompt characters so you can just copy the command. sql is my alias for sqlcl,
+-- the newer, better implementation of sqlplus. If you don't have sqlcl, you can
+-- still use sqlplus.
 
 -- If the same statement appears on multiple slides, each slide title will be 
 -- posted above the content instead of repeating the content multiple times.
@@ -76,15 +78,15 @@ select tablespace_name                                         as "Tablespace Na
  using (tablespace_name);
 
 -- Download and extract APEX
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
-wget https://download.oracle.com/otn_software/apex/apex_22.2.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+wget https://download.oracle.com/otn_software/apex/apex_23.1.zip
 
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
-unzip -q apex_22.2.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+unzip -q apex_23.1.zip
 
 -- Install APEX component in a pluggable database
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2/apex]
-sqlplus sys@orcl as sysdba
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1/apex]
+sql sys@orcl as sysdba
 @apexins sysaux sysaux temp /i/
 exit
 
@@ -107,19 +109,19 @@ select comp_name
 
 
 -- Get the latest APEX Patch
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
 vim wget.sh
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
 chmod u+x wget.sh
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
 ./wget.sh
 
 -- Install the latest APEX Patch in the database
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
-unzip -q p34628174_2220_Generic.zip
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2]
-cd 34628174
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2/33428174]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+unzip -q p35283657_2310_Generic.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+cd 35283657
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1/35283657]
 sqlplus sys@orcl as sysdba
 @catpatch
 
@@ -150,28 +152,27 @@ select apex_web_service.make_rest_request('https://www.google.com'
   from dual;
 
 -- Let's make that TLS wallet
-[oracle@databaseserver DB:dbacon ~]
+[oracle@databaseserver DB:orclcon ~]
 locate /xdb_wallet/
 
-[oracle@databaseserver DB:dbacon ~]
-mkdir /u01/app/oracle/admin/dbacon/tls_wallet
-
-[oracle@databaseserver DB:dbacon ~]
+[oracle@databaseserver DB:orclcon ~]
+mkdir /u01/app/oracle/admin/orclcon/tls_wallet
+[oracle@databaseserver DB:orclcon ~]
 cd !$
 
-[oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
 orapki wallet create -wallet . -auto_login
 
-[oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
 ls
 
 -- What's in the TLS wallet?
-[oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
 orapki wallet display -wallet .
 
 -- Configure APEX component TLS wallet location
-sqlplus sys@orcl as sysdba
-exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/dbacon/tls_wallet');
+sql sys@orcl as sysdba
+exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/orclcon/tls_wallet');
 commit; 
 
 -- Add a root certificate into the wallet
@@ -207,16 +208,16 @@ Z6tGn6D/Qqc6f1zLXbBwHSs09dR2CQzreExZBfMzQsNhFRAbd03OIozUhfJFfbdT
 bP6MvPJwNQzcmRk13NfIRmPVNnGuV/u3gm3c
 -----END CERTIFICATE-----
 
-[oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
-vim GlobalSignRootCA-R1.cer
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+vim GTSRootR1.crt
 
-[oracle@oracleserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
-orapki wallet add -wallet . -trusted_cert -cert GlobalSignRootCA-R1.cer
+[oracle@oracleserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+orapki wallet add -wallet . -trusted_cert -cert GTSRootR1.crt
 
-[oracle@databaseserver DB:dbacon /u01/app/oracle/admin/dbacon/tls_wallet]
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
 orapki wallet display -wallet .
 
--- I’d like to manage this access with greater granularity…
+-- I'd like to manage this access with greater granularity…
 begin
     dbms_network_acl_admin.append_host_ace(
         host => 'www.google.com',
@@ -228,6 +229,10 @@ begin
 end;
 /
 
+-- This certificate thing is a pain...
+https://github.com/Dani3lSun/oracle-ca-wallet-creator
+https://gist.github.com/fuzziebrain/202f902d8fc6d8de586da5097a501047 
+
 -- Unlocking and creating new accounts?
 select profile
      , limit
@@ -235,8 +240,8 @@ select profile
 where profile = 'DEFAULT'
   and resource_name = 'PASSWORD_LIFE_TIME';
 
-[oracle@databaseserver DB:dbacon ~]
-sqlplus sys@orcl as sysdba
+[oracle@databaseserver DB:orclcon ~]
+sql sys@orcl as sysdba
 alter profile default limit password_life_time unlimited;
 
 -- Unlock apex_public_user
@@ -244,26 +249,23 @@ alter user apex_public_user identified by oracle_4U account unlock;
 
 -- Download ORDS
 [root@applicationserver /usr/local/src/oracle/ords]
-wget https://download.oracle.com/otn_software/java/ords/ords-latest.zip
-
-[root@applicationserver /usr/local/src/oracle/ords]
-mv ords-latest.zip ords-22.4.3.zip
+wget https://download.oracle.com/otn_software/java/ords/ords-23.1.4.150.1808.zip
 
 -- ORDS Directories
 [root@applicationserver ~]
-mkdir -p /opt/ords/22.4.3
+mkdir -p /opt/ords/23.1.4
 
 [root@applicationserver ~]
-mkdir -p /etc/ords/22.4.3
+mkdir -p /etc/ords/23.1.4
 
 [root@applicationserver ~]
 mkdir -p /var/www/html/i   
 
 -- 1. Use Oracle's Content Delivery Network (preferred)
-[oracle@databaseserver DB:dbacon /usr/local/src/oracle/apex/22.2/apex/utilities]
-sqlplus sys@orcl as sysdba
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1/apex/utilities]
+sql sys@orcl as sysdba
 @reset_image_prefix
-https://static.oracle.com/cdn/apex/22.2.0/
+https://static.oracle.com/cdn/apex/23.1.1/
 
 -- 2. Or deploy and patch APEX static images manually
 [root@applicationserver /var/www/html]
@@ -273,28 +275,28 @@ mkdir i
 cd i
 
 [root@applicationserver /var/www/html/i]
-cp -R /usr/local/src/oracle/apex/22.2/apex/images/* .
-                                                            */ -- Ignore this line, it's to make stuff pretty in VSCode
+cp -R /usr/local/src/oracle/apex/23.1/apex/images/* .
+                                                            */ -- Ignore this comment, it's to make stuff pretty in VSCode
 [root@applicationserver /var/www/html/i]
-\cp -R /usr/local/src/oracle/apex/34628174/images/* . 
-                                                            */ -- Ignore this line, it's to make stuff pretty in VSCode
+\cp -R /usr/local/src/oracle/apex/35283657/images/* . 
+                                                            */ -- Ignore this comment, it's to make stuff pretty in VSCode
 -- Create ORDS Runtime
-[root@applicationserver /opt/ords/22.4.3]
-unzip -q /usr/local/src/oracle/ords/ords-22.4zip
+[root@applicationserver /opt/ords/23.1.4]
+unzip -q /usr/local/src/oracle/ords/ords-23.1.4.150.1808.zip
 
-[root@applicationserver /opt/ords/22.4.3]
+[root@applicationserver /opt/ords/23.1.4]
 ll
 
 -- ORDS runtime details
-[root@applicationserver /opt/ords/22.4.3]
+[root@applicationserver /opt/ords/23.1.4]
 tree bin
 
-[root@applicationserver /opt/ords/22.4.3]
+[root@applicationserver /opt/ords/23.1.4]
 tree scripts
 
 -- Configure ORDS & Configure ORDS (continued)
-[root@applicationserver /opt/ords/22.4.3/bin]
-./ords --config /etc/ords/22.4.3 install
+[root@applicationserver /opt/ords/23.1.4/bin]
+./ords --config /etc/ords/23.1.4 install
 2
 1
 databaseserver.insum.ca
@@ -312,15 +314,19 @@ applicationserver.insum.ca
 
 -- What happened in our configuration directory?
 [root@applicationserver ~]
-tree /etc/ords/22.4.3
+tree /etc/ords/23.1.4
 
 -- What is in settings.xml?
-[root@applicationserver /etc/ords/22.4/global]
+[root@applicationserver /etc/ords/23.1.4/global]
 cat settings.xml
 
+-- What is in pool.xml?
+[root@applicationserver /etc/ords/23.1.4/databases/default]
+cat pool.xml 
+
 -- Create an APEX admin user and password
-[oracle@oracleserver DB:dbacon /usr/local/src/oracle/apex/22.2/apex]
-sqlplus sys@orcl as sysdba 
+[oracle@oracleserver DB:orclcon /usr/local/src/oracle/apex/23.1/apex]
+sql sys@orcl as sysdba 
 @paxchpwd
 ADMIN
 rsoule@insum.ca
@@ -330,13 +336,13 @@ exit
 ^c
 
 -- Reconfigure ORDS Settings
-[root@applicationserver /etc/ords/22.4/global]
+[root@applicationserver /etc/ords/23.1.4/global]
 cat settings.xml
-
-[root@applicationserver /etc/ords/22.4/global]
+  -- Note, old values here
+[root@applicationserver /etc/ords/23.1.4/global]
 vim settings.xml
 
-[root@applicationserver /etc/ords/22.4/global]
+[root@applicationserver /etc/ords/23.1.4/global]
 cat settings.xml
   -- Note, updated and/or added lines shown below:
 <entry key="standalone.context.path">/app</entry>
@@ -348,19 +354,19 @@ cat settings.xml
 -- Configure ORDS directories to be more maintainable
    -- Today
 [root@applicationserver /etc/ords]
-ln -s 22.4.3 latest
+ln -s 23.1.4 latest
 
 [root@applicationserver /etc/ords]
 cd /opt/ords
 
 [root@applicationserver /opt/ords]
-ln -s 22.4.3 latest
+ln -s 23.1.4 latest
    -- At some point in the future
 [root@applicationserver /etc/ords]
 unlink latest
 
 [root@applicationserver /etc/ords]
-ln -s 23.1 latest
+ln -s 23.2.0 latest
 
 [root@applicationserver /etc/ords]
 cd /opt/ords
@@ -369,14 +375,14 @@ cd /opt/ords
 unlink latest
 
 [root@applicationserver /opt/ords]
-ln -s 23.1 latest
+ln -s 23.2.0 latest
 
 -- Restart & monitor ORDS (simple mode)
 [root@applicationserver ~]
-nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> ords.log 2>&1 &
+nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> /var/log/ords.log 2>&1 &
 
 [root@applicationserver ~]
-tail -f ords.log
+tail -f /var/log/ords.log
 
 -- What new schemas do you have after APEX & ORDS are installed?
 -- What happened to our APEX & ORDS schemas?
@@ -414,6 +420,9 @@ select parsing_schema
   from dba_ords_schemas s
   join dba_ords_url_mappings u 
     on s.url_mapping_id = u.id;
+
+-- Now featuring self-service schema requests!
+https://www.thatjeffsmith.com/archive/2023/01/ords-sql-developer-web-22-4-2-self-service-schemas/
 
 -- Pluggable default resource plan during the day
 -- Pluggable default maintenance resource plan nights & weekends
@@ -516,14 +525,14 @@ end;
 /
   
 -- Set the new plan as the active plan
-alter system set resource_manager_plan = 'APEX_RATIO_PLAN' comment= '2022-03-15 Rich Soule xxx.xxx.xxxx) Created and implemented a new plan' scope=both;
+alter system set resource_manager_plan = 'APEX_RATIO_PLAN' comment= '2022-03-15 Rich Soule 512.xxx.xxxx) Created and implemented a new plan' scope=both;
  
 -- Stop old ORDS run with nohup
 [root@applicationserver ~]
 ps -ef | grep ords | grep -v grep
 
 [root@applicationserver ~]
-kill 1348575
+kill 565323
 
 -- Create ORDS service
 [root@applicationserver /etc/systemd/system]
@@ -532,7 +541,6 @@ vim ords.service
 [Unit]
 Description=Oracle REST Data Services
 Requires=network.target
-
 [Service]
 User=root
 ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/latest serve
@@ -542,15 +550,13 @@ Restart=always
 RestartSec=30
 TimeoutStartSec=30
 TimeoutStopSec=30
-
 [Install]
 WantedBy=multi-user.target
-
 
 [root@applicationserver ~]
 systemctl daemon-reload 
 
--- Manage ORDS service – enable and start
+-- Manage ORDS service - enable and start
 [root@applicationserver ~]
 systemctl enable ords 
 
@@ -561,7 +567,7 @@ systemctl start ords
 [root@applicationserver ~]
 systemctl status ords
 
--- Manage ORDS service – read logs & stop
+-- Manage ORDS service - read logs & stop
 [root@applicationserver ~]
 journalctl -u ords.service
 
@@ -605,7 +611,7 @@ cat ords.xml
 
    -- Note: Not on slides, but if you are running this on your DB server,
    -- then you'll also need at least the database service, and maybe the
-   -- OEM agent service.
+   -- OEM agent service ports to be open too, see below for examples.
 
 [root@applicationserver /etc/firewalld/services]
 cat oracle-database.xml
