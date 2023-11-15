@@ -10,6 +10,11 @@
 -- prompt characters so you can just copy the command. sql is my alias for sqlcl,
 -- the newer, better implementation of sqlplus. If you don't have sqlcl, you can
 -- still use sqlplus.
+-- November 15th, 2023 Update:
+-- Note that the current version of APEX is actually 23.2, not 23.1, but I 
+-- have yet to update the presentation for 23.2. You should install 23.2, not
+-- 23.1, AND there currently isn't a patch for APEX 23.2. Everything is identical 
+-- with the exception of the names of the files and directories for APEX.
 
 -- If the same statement appears on multiple slides, each slide title will be 
 -- posted above the content instead of repeating the content multiple times.
@@ -81,7 +86,7 @@ select tablespace_name                                         as "Tablespace Na
 [oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
 wget https://download.oracle.com/otn_software/apex/apex_23.1.zip
 
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.3]
 unzip -q apex_23.1.zip
 
 -- Install APEX component in a pluggable database
@@ -249,20 +254,20 @@ alter user apex_public_user identified by oracle_4U account unlock;
 
 -- Download ORDS
 [root@applicationserver /usr/local/src/oracle/ords]
-wget https://download.oracle.com/otn_software/java/ords/ords-23.1.4.150.1808.zip
+wget https://download.oracle.com/otn_software/java/ords/ords-23.3.0.289.1830.zip
 
 -- ORDS Directories
 [root@applicationserver ~]
-mkdir -p /opt/ords/23.1.4
+mkdir -p /opt/ords/23.3
 
 [root@applicationserver ~]
-mkdir -p /etc/ords/23.1.4
+mkdir -p /etc/ords/23.3
 
 [root@applicationserver ~]
 mkdir -p /var/www/html/i   
 
 -- 1. Use Oracle's Content Delivery Network (preferred)
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1/apex/utilities]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.3/apex/utilities]
 sql sys@orcl as sysdba
 @reset_image_prefix
 https://static.oracle.com/cdn/apex/23.1.1/
@@ -281,22 +286,22 @@ cp -R /usr/local/src/oracle/apex/23.1/apex/images/* .
 \cp -R /usr/local/src/oracle/apex/35283657/images/* . 
                                                             */ -- Ignore this comment, it's to make stuff pretty in VSCode
 -- Create ORDS Runtime
-[root@applicationserver /opt/ords/23.1.4]
-unzip -q /usr/local/src/oracle/ords/ords-23.1.4.150.1808.zip
+[root@applicationserver /opt/ords/23.1]
+unzip -q /usr/local/src/oracle/ords/ords-23.1.0.289.1830.zip
 
-[root@applicationserver /opt/ords/23.1.4]
+[root@applicationserver /opt/ords/23.3]
 ll
 
 -- ORDS runtime details
-[root@applicationserver /opt/ords/23.1.4]
+[root@applicationserver /opt/ords/23.3]
 tree bin
 
-[root@applicationserver /opt/ords/23.1.4]
+[root@applicationserver /opt/ords/23.3]
 tree scripts
 
 -- Configure ORDS & Configure ORDS (continued)
-[root@applicationserver /opt/ords/23.1.4/bin]
-./ords --config /etc/ords/23.1.4 install
+[root@applicationserver /opt/ords/23.3/bin]
+./ords --config /etc/ords/23.3 install
 2
 1
 databaseserver.insum.ca
@@ -314,14 +319,14 @@ applicationserver.insum.ca
 
 -- What happened in our configuration directory?
 [root@applicationserver ~]
-tree /etc/ords/23.1.4
+tree /etc/ords/23.3
 
 -- What is in settings.xml?
-[root@applicationserver /etc/ords/23.1.4/global]
+[root@applicationserver /etc/ords/23.3/global]
 cat settings.xml
 
 -- What is in pool.xml?
-[root@applicationserver /etc/ords/23.1.4/databases/default]
+[root@applicationserver /etc/ords/23.3/databases/default]
 cat pool.xml 
 
 -- Create an APEX admin user and password
@@ -336,13 +341,13 @@ exit
 ^c
 
 -- Reconfigure ORDS Settings
-[root@applicationserver /etc/ords/23.1.4/global]
+[root@applicationserver /etc/ords/23.3/global]
 cat settings.xml
   -- Note, old values here
-[root@applicationserver /etc/ords/23.1.4/global]
+[root@applicationserver /etc/ords/23.3/global]
 vim settings.xml
 
-[root@applicationserver /etc/ords/23.1.4/global]
+[root@applicationserver /etc/ords/23.3/global]
 cat settings.xml
   -- Note, updated and/or added lines shown below:
 <entry key="standalone.context.path">/app</entry>
@@ -354,13 +359,13 @@ cat settings.xml
 -- Configure ORDS directories to be more maintainable
    -- Today
 [root@applicationserver /etc/ords]
-ln -s 23.1.4 latest
+ln -s 23.3 latest
 
 [root@applicationserver /etc/ords]
 cd /opt/ords
 
 [root@applicationserver /opt/ords]
-ln -s 23.1.4 latest
+ln -s 23.3 latest
    -- At some point in the future
 [root@applicationserver /etc/ords]
 unlink latest
