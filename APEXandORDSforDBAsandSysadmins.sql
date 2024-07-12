@@ -10,11 +10,10 @@
 -- prompt characters so you can just copy the command. sql is my alias for sqlcl,
 -- the newer, better implementation of sqlplus. If you don't have sqlcl, you can
 -- still use sqlplus.
--- November 15th, 2023 Update:
--- Note that the current version of APEX is actually 23.2, not 23.1, but I 
--- have yet to update the presentation for 23.2. You should install 23.2, not
--- 23.1, AND there currently isn't a patch for APEX 23.2. Everything is identical 
--- with the exception of the names of the files and directories for APEX.
+-- July 12th, 2024 Update:
+-- For Kscope24 in Nashville I've updated the entire presentation.
+-- I'm using Oracle 23ai on Oracle Cloud Oracle Base Database, Oracle APEX 24.1.2,
+-- and ORDS 24.2.
 
 -- If the same statement appears on multiple slides, each slide title will be 
 -- posted above the content instead of repeating the content multiple times.
@@ -83,19 +82,18 @@ select tablespace_name                                         as "Tablespace Na
  using (tablespace_name);
 
 -- Download and extract APEX
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
-wget https://download.oracle.com/otn_software/apex/apex_23.1.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+wget https://download.oracle.com/otn_software/apex/apex_24.1.zip
 
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.3]
-unzip -q apex_23.1.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+unzip -q apex_24.1.zip
 
 -- Install APEX component in a pluggable database
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1/apex]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1/apex]
 sql sys@orcl as sysdba
 @apexins sysaux sysaux temp /i/
 exit
 
--- What does the database now tell us about APEX?
 -- What does the database now tell us about APEX?
 -- There are two different versions of this slide, all statements are below
 select *
@@ -114,19 +112,21 @@ select comp_name
 
 
 -- Get the latest APEX Patch
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
 vim wget.sh
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
 chmod u+x wget.sh
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
 ./wget.sh
+rsoule@insum.ca
+Password -- NOTE: There often isn't a password prompt!!!
 
 -- Install the latest APEX Patch in the database
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
-unzip -q p35283657_2310_Generic.zip
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1]
-cd 35283657
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.1/35283657]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+unzip -q p36695709_2410_Generic.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+cd 36695709
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1/36695709]
 sqlplus sys@orcl as sysdba
 @catpatch
 
@@ -145,98 +145,35 @@ begin
    dbms_network_acl_admin.append_host_ace(
       host => '*',
       ace => xs$ace_type(privilege_list => xs$name_list('connect'),
-                         principal_name => 'APEX_220200',
+                         principal_name => apex_application.g_flow_schema_owner,
                          principal_type => xs_acl.ptype_db));
 end;
 /
 
--- …but not for TLS protected URLs
--- TLS URLs signed by the wallet certificates are now accessible
+-- ...including for URLs secured by signed TLS certificates!
+-- …but not for TLS protected URLs -- From the appendix for pre-23ai releases
+-- TLS URLs signed by the wallet certificates are now accessible -- From the appendix for pre-23ai releases
 select apex_web_service.make_rest_request('https://www.google.com'
                                          ,'GET') as "Secure Google"
   from dual;
 
--- Let's make that TLS wallet
-[oracle@databaseserver DB:orclcon ~]
-locate /xdb_wallet/
+-- What about URLs with self-signed certificates?
+[root@databaseserver DB: ~]
+cp self_signed_certificate.crt /etc/pki/ca-trust/source/anchors/
+[root@databaseserver DB: ~]
+update-ca-trust
 
-[oracle@databaseserver DB:orclcon ~]
-mkdir /u01/app/oracle/admin/orclcon/tls_wallet
-[oracle@databaseserver DB:orclcon ~]
-cd !$
-
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
-orapki wallet create -wallet . -auto_login
-
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
-ls
-
--- What's in the TLS wallet?
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
-orapki wallet display -wallet .
-
--- Configure APEX component TLS wallet location
-sql sys@orcl as sysdba
-exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/orclcon/tls_wallet');
-commit; 
-
--- Add a root certificate into the wallet
------BEGIN CERTIFICATE-----
-MIIFVzCCAz+gAwIBAgINAgPlk28xsBNJiGuiFzANBgkqhkiG9w0BAQwFADBHMQsw
-CQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2VzIExMQzEU
-MBIGA1UEAxMLR1RTIFJvb3QgUjEwHhcNMTYwNjIyMDAwMDAwWhcNMzYwNjIyMDAw
-MDAwWjBHMQswCQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZp
-Y2VzIExMQzEUMBIGA1UEAxMLR1RTIFJvb3QgUjEwggIiMA0GCSqGSIb3DQEBAQUA
-A4ICDwAwggIKAoICAQC2EQKLHuOhd5s73L+UPreVp0A8of2C+X0yBoJx9vaMf/vo
-27xqLpeXo4xL+Sv2sfnOhB2x+cWX3u+58qPpvBKJXqeqUqv4IyfLpLGcY9vXmX7w
-Cl7raKb0xlpHDU0QM+NOsROjyBhsS+z8CZDfnWQpJSMHobTSPS5g4M/SCYe7zUjw
-TcLCeoiKu7rPWRnWr4+wB7CeMfGCwcDfLqZtbBkOtdh+JhpFAz2weaSUKK0Pfybl
-qAj+lug8aJRT7oM6iCsVlgmy4HqMLnXWnOunVmSPlk9orj2XwoSPwLxAwAtcvfaH
-szVsrBhQf4TgTM2S0yDpM7xSma8ytSmzJSq0SPly4cpk9+aCEI3oncKKiPo4Zor8
-Y/kB+Xj9e1x3+naH+uzfsQ55lVe0vSbv1gHR6xYKu44LtcXFilWr06zqkUspzBmk
-MiVOKvFlRNACzqrOSbTqn3yDsEB750Orp2yjj32JgfpMpf/VjsPOS+C12LOORc92
-wO1AK/1TD7Cn1TsNsYqiA94xrcx36m97PtbfkSIS5r762DL8EGMUUXLeXdYWk70p
-aDPvOmbsB4om3xPXV2V4J95eSRQAogB/mqghtqmxlbCluQ0WEdrHbEg8QOB+DVrN
-VjzRlwW5y0vtOUucxD/SVRNuJLDWcfr0wbrM7Rv1/oFB2ACYPTrIrnqYNxgFlQID
-AQABo0IwQDAOBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4E
-FgQU5K8rJnEaK0gnhS9SZizv8IkTcT4wDQYJKoZIhvcNAQEMBQADggIBAJ+qQibb
-C5u+/x6Wki4+omVKapi6Ist9wTrYggoGxval3sBOh2Z5ofmmWJyq+bXmYOfg6LEe
-QkEzCzc9zolwFcq1JKjPa7XSQCGYzyI0zzvFIoTgxQ6KfF2I5DUkzps+GlQebtuy
-h6f88/qBVRRiClmpIgUxPoLW7ttXNLwzldMXG+gnoot7TiYaelpkttGsN/H9oPM4
-7HLwEXWdyzRSjeZ2axfG34arJ45JK3VmgRAhpuo+9K4l/3wV3s6MJT/KYnAK9y8J
-ZgfIPxz88NtFMN9iiMG1D53Dn0reWVlHxYciNuaCp+0KueIHoI17eko8cdLiA6Ef
-MgfdG+RCzgwARWGAtQsgWSl4vflVy2PFPEz0tv/bal8xa5meLMFrUKTX5hgUvYU/
-Z6tGn6D/Qqc6f1zLXbBwHSs09dR2CQzreExZBfMzQsNhFRAbd03OIozUhfJFfbdT
-6u9AWpQKXCBfTkBdYiJ23//OYb2MI3jSNwLgjt7RETeJ9r/tSQdirpLsQBqvFAnZ
-0E6yove+7u7Y/9waLd64NnHi/Hm3lCXRSHNboTXns5lndcEZOitHTtNCjv0xyBZm
-2tIMPNuzjsmhDYAPexZ3FL//2wmUspO8IFgV6dtxQ/PeEMMA3KgqlbbC1j+Qa3bb
-bP6MvPJwNQzcmRk13NfIRmPVNnGuV/u3gm3c
------END CERTIFICATE-----
-
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
-vim GTSRootR1.crt
-
-[oracle@oracleserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
-orapki wallet add -wallet . -trusted_cert -cert GTSRootR1.crt
-
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
-orapki wallet display -wallet .
-
--- I'd like to manage this access with greater granularity…
+-- I'd like to manage this access with greater granularity!
 begin
     dbms_network_acl_admin.append_host_ace(
         host => 'www.google.com',
         lower_port => 443,
         upper_port => 443,
         ace => xs$ace_type(privilege_list => xs$name_list('http'),
-                           principal_name => 'APEX_220200',
+                           principal_name => apex_application.g_flow_schema_owner,
                            principal_type => xs_acl.ptype_db));
 end;
 /
-
--- This certificate thing is a pain...
-https://github.com/Dani3lSun/oracle-ca-wallet-creator
-https://gist.github.com/fuzziebrain/202f902d8fc6d8de586da5097a501047 
 
 -- Unlocking and creating new accounts?
 select profile
@@ -254,124 +191,123 @@ alter user apex_public_user identified by oracle_4U account unlock;
 
 -- Download ORDS
 [root@applicationserver /usr/local/src/oracle/ords]
-wget https://download.oracle.com/otn_software/java/ords/ords-23.3.0.289.1830.zip
+wget https://download.oracle.com/otn_software/java/ords/ords-24.2.2.187.1943.zip
 
 -- ORDS Directories
 [root@applicationserver ~]
-mkdir -p /opt/ords/23.3
+mkdir -p /opt/ords/24.2
 
 [root@applicationserver ~]
-mkdir -p /etc/ords/23.3
+mkdir -p /etc/ords/24.2
 
 [root@applicationserver ~]
 mkdir -p /var/www/html/i   
 
+[root@applicationserver ~]
+mkdir -p /var/log/ords/24.2 
+
 -- 1. Use Oracle's Content Delivery Network (preferred)
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/23.3/apex/utilities]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2/apex/utilities]
 sql sys@orcl as sysdba
 @reset_image_prefix
-https://static.oracle.com/cdn/apex/23.1.1/
+https://static.oracle.com/cdn/apex/24.1.2/
 
 -- 2. Or deploy and patch APEX static images manually
-[root@applicationserver /var/www/html]
-mkdir i
-
-[root@applicationserver /var/www/html]
-cd i
-
 [root@applicationserver /var/www/html/i]
-cp -R /usr/local/src/oracle/apex/23.1/apex/images/* .
+cp -R /usr/local/src/oracle/apex/24.1/apex/images/* .
                                                             */ -- Ignore this comment, it's to make stuff pretty in VSCode
 [root@applicationserver /var/www/html/i]
 \cp -R /usr/local/src/oracle/apex/35283657/images/* . 
                                                             */ -- Ignore this comment, it's to make stuff pretty in VSCode
 -- Create ORDS Runtime
-[root@applicationserver /opt/ords/23.1]
-unzip -q /usr/local/src/oracle/ords/ords-23.1.0.289.1830.zip
+[root@applicationserver /opt/ords/24.1]
+unzip -q /usr/local/src/oracle/ords/ords-24.2.2.187.1943.zip
 
-[root@applicationserver /opt/ords/23.3]
+[root@applicationserver /opt/ords/24.2]
 ll
 
 -- ORDS runtime details
-[root@applicationserver /opt/ords/23.3]
+[root@applicationserver /opt/ords/24.2]
 tree bin
 
-[root@applicationserver /opt/ords/23.3]
+[root@applicationserver /opt/ords/24.2]
 tree scripts
 
 -- Configure ORDS & Configure ORDS (continued)
-[root@applicationserver /opt/ords/23.3/bin]
-./ords --config /etc/ords/23.3 install
-2
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 install
 1
 databaseserver.insum.ca
 1521
 orcl.insum.ca
 sys
-sysaux
-temp
-1
-1
-2
-443
-applicationserver.insum.ca
-/var/www/html/i
+3 -- Then specify password
+7 -- Then choose https, 443, and self signed certs (or signed and then provide the cert locations) and applicationserver.insum.ca
+11 -- Then /var/www/html/i
+A
 
 -- What happened in our configuration directory?
 [root@applicationserver ~]
-tree /etc/ords/23.3
+tree /etc/ords/24.2
 
 -- What is in settings.xml?
-[root@applicationserver /etc/ords/23.3/global]
+[root@applicationserver /etc/ords/24.2/global]
 cat settings.xml
 
 -- What is in pool.xml?
-[root@applicationserver /etc/ords/23.3/databases/default]
+[root@applicationserver /etc/ords/24.2/databases/default]
 cat pool.xml 
 
 -- Create an APEX admin user and password
-[oracle@oracleserver DB:orclcon /usr/local/src/oracle/apex/23.1/apex]
+[oracle@oracleserver DB:orclcon /usr/local/src/oracle/apex/24.1/apex]
 sql sys@orcl as sysdba 
 @paxchpwd
 ADMIN
 rsoule@insum.ca
+Oracle_4U -- Choose a password
 exit
 
 -- Stop ORDS
 ^c
 
 -- Reconfigure ORDS Settings
-[root@applicationserver /etc/ords/23.3/global]
-cat settings.xml
-  -- Note, old values here
-[root@applicationserver /etc/ords/23.3/global]
-vim settings.xml
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set standalone.doc.root /var/www/html
 
-[root@applicationserver /etc/ords/23.3/global]
-cat settings.xml
-  -- Note, updated and/or added lines shown below:
-<entry key="standalone.context.path">/app</entry>
-<entry key="standalone.doc.root">/var/www/html</entry>
-<entry key="jdbc.MinLimit">12</entry>
-<entry key="jdbc.InitialLimit">12</entry>
-<entry key="jdbc.MaxLimit">12</entry>
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set standalone.context.path /app
+
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set jdbc.InitialLimit 21
+
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set jdbc.MinLimit 21
+
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set jdbc.MaxLimit 21
+
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set standalone.access.log /var/log/ords/24.2
+
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set standalone.access.log.retainDays 5
 
 -- Configure ORDS directories to be more maintainable
    -- Today
 [root@applicationserver /etc/ords]
-ln -s 23.3 latest
+ln -s 24.2 latest
 
 [root@applicationserver /etc/ords]
 cd /opt/ords
 
 [root@applicationserver /opt/ords]
-ln -s 23.3 latest
+ln -s 24.2 latest
    -- At some point in the future
 [root@applicationserver /etc/ords]
 unlink latest
 
 [root@applicationserver /etc/ords]
-ln -s 23.2.0 latest
+ln -s 25.1 latest
 
 [root@applicationserver /etc/ords]
 cd /opt/ords
@@ -380,14 +316,14 @@ cd /opt/ords
 unlink latest
 
 [root@applicationserver /opt/ords]
-ln -s 23.2.0 latest
+ln -s 25.1 latest
 
--- Restart & monitor ORDS (simple mode)
+-- Restart & monitor ORDS (easy? mode)
 [root@applicationserver ~]
-nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> /var/log/ords.log 2>&1 &
+nohup /opt/ords/latest/bin/ords --config /etc/ords/latest/ serve >> /var/log/ords/24.2/ords-serve.log 2>&1 &
 
 [root@applicationserver ~]
-tail -f /var/log/ords.log
+tail -f /var/log/ords/24.2/ords-serve.log
 
 -- What new schemas do you have after APEX & ORDS are installed?
 -- What happened to our APEX & ORDS schemas?
@@ -413,7 +349,7 @@ grant dba to rich;
 grant create session to bob;
 exec ords_admin.enable_schema(p_schema => 'rich');
 commit;
-exec ords_admin.enable_schema(p_schema => 'bob',p_url_mapping_pattern => 'coolguy');
+exec ords_admin.enable_schema(p_schema => 'bob', p_url_mapping_pattern => 'coolguy');
 commit; 
 
 -- What does the database tell us about REST schemas?
@@ -426,12 +362,11 @@ select parsing_schema
   join dba_ords_url_mappings u 
     on s.url_mapping_id = u.id;
 
--- Now featuring self-service schema requests!
-https://www.thatjeffsmith.com/archive/2023/01/ords-sql-developer-web-22-4-2-self-service-schemas/
+-- Bonus Extras!
 
 -- Pluggable default resource plan during the day
 -- Pluggable default maintenance resource plan nights & weekends
-sql sys as sysdba
+sql sys@orcl as sysdba
 show parameter resource_manager_plan
 
 -- Let's make a new plan!
@@ -537,7 +472,7 @@ alter system set resource_manager_plan = 'APEX_RATIO_PLAN' comment= '2022-03-15 
 ps -ef | grep ords | grep -v grep
 
 [root@applicationserver ~]
-kill 565323
+kill 3481618
 
 -- Create ORDS service
 [root@applicationserver /etc/systemd/system]
@@ -547,6 +482,8 @@ vim ords.service
 Description=Oracle REST Data Services
 Requires=network.target
 [Service]
+Environment="JAVA_HOME=/opt/java/latest"
+Environment="JAVA_OPTS=-Dorg.eclipse.jetty.server.Request.maxFormContentSize=3000000 -Xms1024M -Xmx1024M"
 User=root
 ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/latest serve
 ExecStop=/usr/bin/kill -HUP ${MAINPID}
@@ -653,26 +590,91 @@ firewall-cmd --runtime-to-permanent
 firewall-cmd --add-masquerade 
 
 -- Update the port that ORDS uses
-[root@applicationserver /etc/ords/latest/global]
-vim settings.xml
-
-[root@applicationserver /etc/ords/latest/global]
-cat settings.xml
-   -- Note: Only the below line is changed.
-<entry key="standalone.https.port">8080</entry>
-
-[root@applicationserver /etc/ords/latest/global]
-systemctl daemon-reload
+[root@applicationserver /opt/ords/24.2/bin]
+./ords --config /etc/ords/24.2 config set standalone.https.port 8080
 
 -- Secure the ords account & start ORDS
-[root@applicationserver ~]
-systemctl start firewalld
-
 [root@applicationserver ~]
 usermod -s /usr/sbin/nologin ords
  
 [root@applicationserver ~]
 su - ords
 
+[root@applicationserver /etc/ords/latest/global]
+systemctl daemon-reload
+
 [root@applicationserver ~]
 systemctl start ords
+
+-- Appendix Content for pre-23ai Databases
+-- All of this goes away when you start using Oracle 23ai!
+
+-- Let's make that TLS wallet
+[oracle@databaseserver DB:orclcon ~]
+locate /xdb_wallet/
+
+[oracle@databaseserver DB:orclcon ~]
+mkdir /u01/app/oracle/admin/orclcon/tls_wallet
+[oracle@databaseserver DB:orclcon ~]
+cd !$
+
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+orapki wallet create -wallet . -auto_login
+
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+ls
+
+-- What's in the TLS wallet?
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+orapki wallet display -wallet .
+
+-- Configure APEX component TLS wallet location
+sql sys@orcl as sysdba
+exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/orclcon/tls_wallet');
+commit; 
+
+-- Add a root certificate into the wallet
+-----BEGIN CERTIFICATE-----
+MIIFVzCCAz+gAwIBAgINAgPlk28xsBNJiGuiFzANBgkqhkiG9w0BAQwFADBHMQsw
+CQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2VzIExMQzEU
+MBIGA1UEAxMLR1RTIFJvb3QgUjEwHhcNMTYwNjIyMDAwMDAwWhcNMzYwNjIyMDAw
+MDAwWjBHMQswCQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZp
+Y2VzIExMQzEUMBIGA1UEAxMLR1RTIFJvb3QgUjEwggIiMA0GCSqGSIb3DQEBAQUA
+A4ICDwAwggIKAoICAQC2EQKLHuOhd5s73L+UPreVp0A8of2C+X0yBoJx9vaMf/vo
+27xqLpeXo4xL+Sv2sfnOhB2x+cWX3u+58qPpvBKJXqeqUqv4IyfLpLGcY9vXmX7w
+Cl7raKb0xlpHDU0QM+NOsROjyBhsS+z8CZDfnWQpJSMHobTSPS5g4M/SCYe7zUjw
+TcLCeoiKu7rPWRnWr4+wB7CeMfGCwcDfLqZtbBkOtdh+JhpFAz2weaSUKK0Pfybl
+qAj+lug8aJRT7oM6iCsVlgmy4HqMLnXWnOunVmSPlk9orj2XwoSPwLxAwAtcvfaH
+szVsrBhQf4TgTM2S0yDpM7xSma8ytSmzJSq0SPly4cpk9+aCEI3oncKKiPo4Zor8
+Y/kB+Xj9e1x3+naH+uzfsQ55lVe0vSbv1gHR6xYKu44LtcXFilWr06zqkUspzBmk
+MiVOKvFlRNACzqrOSbTqn3yDsEB750Orp2yjj32JgfpMpf/VjsPOS+C12LOORc92
+wO1AK/1TD7Cn1TsNsYqiA94xrcx36m97PtbfkSIS5r762DL8EGMUUXLeXdYWk70p
+aDPvOmbsB4om3xPXV2V4J95eSRQAogB/mqghtqmxlbCluQ0WEdrHbEg8QOB+DVrN
+VjzRlwW5y0vtOUucxD/SVRNuJLDWcfr0wbrM7Rv1/oFB2ACYPTrIrnqYNxgFlQID
+AQABo0IwQDAOBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4E
+FgQU5K8rJnEaK0gnhS9SZizv8IkTcT4wDQYJKoZIhvcNAQEMBQADggIBAJ+qQibb
+C5u+/x6Wki4+omVKapi6Ist9wTrYggoGxval3sBOh2Z5ofmmWJyq+bXmYOfg6LEe
+QkEzCzc9zolwFcq1JKjPa7XSQCGYzyI0zzvFIoTgxQ6KfF2I5DUkzps+GlQebtuy
+h6f88/qBVRRiClmpIgUxPoLW7ttXNLwzldMXG+gnoot7TiYaelpkttGsN/H9oPM4
+7HLwEXWdyzRSjeZ2axfG34arJ45JK3VmgRAhpuo+9K4l/3wV3s6MJT/KYnAK9y8J
+ZgfIPxz88NtFMN9iiMG1D53Dn0reWVlHxYciNuaCp+0KueIHoI17eko8cdLiA6Ef
+MgfdG+RCzgwARWGAtQsgWSl4vflVy2PFPEz0tv/bal8xa5meLMFrUKTX5hgUvYU/
+Z6tGn6D/Qqc6f1zLXbBwHSs09dR2CQzreExZBfMzQsNhFRAbd03OIozUhfJFfbdT
+6u9AWpQKXCBfTkBdYiJ23//OYb2MI3jSNwLgjt7RETeJ9r/tSQdirpLsQBqvFAnZ
+0E6yove+7u7Y/9waLd64NnHi/Hm3lCXRSHNboTXns5lndcEZOitHTtNCjv0xyBZm
+2tIMPNuzjsmhDYAPexZ3FL//2wmUspO8IFgV6dtxQ/PeEMMA3KgqlbbC1j+Qa3bb
+bP6MvPJwNQzcmRk13NfIRmPVNnGuV/u3gm3c
+-----END CERTIFICATE-----
+
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+vim GTSRootR1.crt
+
+[oracle@oracleserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+orapki wallet add -wallet . -trusted_cert -cert GTSRootR1.crt
+
+[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+orapki wallet display -wallet .
+
+-- This certificate thing is a pain...
+https://github.com/Dani3lSun/oracle-ca-wallet-creator
+https://gist.github.com/fuzziebrain/202f902d8fc6d8de586da5097a501047 
