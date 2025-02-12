@@ -10,6 +10,16 @@
 -- prompt characters so you can just copy the command. sql is my alias for sqlcl,
 -- the newer, better implementation of sqlplus. If you don't have sqlcl, you can
 -- still use sqlplus.
+-- February 11th, 2025 Update:
+-- For RMOUG training days I've updated the entire presentation.
+-- I'm back to using Oracle 19c (19.26 actually) because Oracle has yet to release
+-- Oracle 23ai for on-premises usage. That said, I've also highlighted where, if you
+-- are using 23ai on the cloud, you won't have to do the 19c stuff around TLS wallets.
+-- I also updated the presentation to use our new corporate name, Talan Oracle Technologies.
+-- We're still the same people that we were when we were Insum, it's just that we are now
+-- part of the Talan group. Thankfully, Talan is keeping us as we were. All our delivery people
+-- are the same and we have the exact same mission as we did before; Continue to be the best
+-- APEX consultancy in the world.
 -- July 12th, 2024 Update:
 -- For Kscope24 in Nashville I've updated the entire presentation.
 -- I'm using Oracle 23ai on Oracle Cloud Oracle Base Database, Oracle APEX 24.1.2,
@@ -19,7 +29,7 @@
 -- posted above the content instead of repeating the content multiple times.
 
 -- Obviously, you should understand what each command does and not just paste 
--- and run it blindly. Use at your own risk. Rich & Insum assume no liability
+-- and run it blindly. Use at your own risk. Rich & Talan assume no liability
 -- for any of the below code.
 
 -- What schemas do you have before APEX is installed?
@@ -31,7 +41,6 @@
        , profile
        , initial_rsrc_consumer_group
        , authentication_type
-       , proxy_only_connect
        , oracle_maintained
     from dba_users
 order by username;
@@ -47,14 +56,14 @@ order by username;
     from dba_registry
 order by comp_name;
 
--- How many public synonyms do you have before APEX is installed?
--- How many public synonyms do you have after APEX is installed?
--- How many public synonyms do you have before APEX & ORDS are installed?
--- How many public synonyms do you have after APEX & ORDS  are installed?
+-- How many public synonyms before APEX is installed?
+-- How many public synonyms after APEX is installed?
+-- How many public synonyms before APEX & ORDS are installed?
+-- How many public synonyms after APEX & ORDS are installed?
     select to_char(count(*),'99,999') as "Total Public Synonyms"
     from dba_synonyms;
 
--- What do your tablespaces look like before APEX is installed?
+-- Tablespaces before APEX is installed?
 -- What do your tablespaces look like after APEX is installed?
 -- What do your tablespaces look like before APEX & ORDS are installed?
 -- What do your tablespaces look like after APEX & ORDS are installed?
@@ -82,14 +91,15 @@ select tablespace_name                                         as "Tablespace Na
  using (tablespace_name);
 
 -- Download and extract APEX
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
-wget https://download.oracle.com/otn_software/apex/apex_24.1.zip
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2]
+wget https://download.oracle.com/otn_software/apex/apex_24.2.zip
 
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
-unzip -q apex_24.1.zip
+
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2]
+unzip -q apex_24.2.zip
 
 -- Install APEX component in a pluggable database
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1/apex]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2/apex]
 sql sys@orcl as sysdba
 @apexins sysaux sysaux temp /i/
 exit
@@ -112,11 +122,11 @@ select comp_name
 
 
 -- Get the latest APEX Patch
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2]
 vim wget.sh
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2]
 chmod u+x wget.sh
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.1]
+[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2]
 ./wget.sh
 rsoule@insum.ca
 Password -- NOTE: There often isn't a password prompt!!!
