@@ -915,7 +915,7 @@ Slide 80 - User access ports: 443 or 80 or 1024 or higher?
 Port 443 (default https port)
    This should always be the port that end users and developers use to get to your applications.
    Users don’t have to put in a port number and modern browsers expect you to use TLS (https) requests.
-   Requires access to a privileged OS account to run the service on Unix OS or you can use iptables/firewalld to redirect 442 to a port ≥ 1024 (see bonus content at the end of the presentation).
+   Requires access to a privileged OS account to run the service on Unix OS or you can use iptables/firewalld to redirect 443 to a port ≥ 1024 (see bonus content at the end of the presentation).
    If you don’t have a signed certificate, modern browsers will mark the site unsecure.
 Port 80 (default http port)
    You really shouldn’t use this anymore.
