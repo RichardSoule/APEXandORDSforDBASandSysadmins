@@ -825,6 +825,12 @@ ________________________________________________________________________________
 
 Note: When testing, it's always better to go ahead and get a new database session after the wallet location is set.
 
+Special Kscope2025 Update!
+While currently undocumented (Connor logged a doc bug that has been accepted) you can,
+with 19.18+ (? probably… make sure you test!) make 19c work just like 23ai by running:
+
+exec utl_http.set_wallet('system:');
+
 Slide 71 - Add a self signed cert to the TLS wallet
 19c or earlier
 [oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
