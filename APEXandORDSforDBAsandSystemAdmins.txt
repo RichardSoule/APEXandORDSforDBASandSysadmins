@@ -806,6 +806,8 @@ Interestingly the APEX admin API doesn't allow you to set this value (you get an
 
 exec utl_http.set_wallet('system:');
 
+SR 3-42740668211 : BUG: apex_instance_admin.set_parameter doesn't allow "system:" as a wallet path in Oracle 19.18+
+
 Slide 71 - Add a self signed cert to the TLS wallet
 19c or earlier
 [oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
@@ -937,6 +939,8 @@ However, you really only need to unlock the account and ensure it won’t expire
 I had support create the following bugs:
 DOC 38011311 - APEX INSTALLATION GUIDE: APEX_PUBLIC_USER SHOULD NOT HAVE A RANDOM PASSWORD
 BUG 38011333 - APEX INSTALLATION GUIDE: APEX_PUBLIC_USER SHOULD BE CREATED WITH "NO AUTHENTICATION"
+SR 3-42740624341 : BUG: APEX_PUBLIC_USER is created locked by apexins script, which is incorrect
+
 The below is not officially supported (yet!), but it works!
 SYS@orcl AS SYSDBA> alter user apex_public_user account unlock no authentication;
 User altered.
