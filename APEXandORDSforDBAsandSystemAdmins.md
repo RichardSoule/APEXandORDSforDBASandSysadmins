@@ -1,30 +1,37 @@
 # Overview
 This document captures each slide's content and commands for the session: APEX & ORDS for DBAs and System Admins by Rich Soule.
 Each slide is labeled individually. Hidden slides are indicated.
-For full reference, see: https://github.com/RichardSoule/APEXandORDSforDBASandSysadmins
 
 If a slide has no content, it was almost certainly just pictures.  
 I also removed the prompt character from commands so that they'd be easier to copy and paste if you wanted to do that.
 
 For example, if the slide had the following text:  
-```
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]  
+```text
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]  
 $ orapki wallet add -wallet . –trusted_cert –cert self_signed_cert.crt 
 ```
 
 It becomes the below in this document:
-```
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]  
+
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]  
+```bash
 orapki wallet add -wallet . –trusted_cert –cert self_signed_cert.crt 
 ```
+This was done so that when you look at this markdown in the right type of markdown viewer (I think markdown is an abomination, but since AI really likes markdown and everybody is doing markdown now, I guess I am too), you'll be able use the copy feature to just grab the various commands.
 
-There are also some slides that are hidden, I use them when I'm looking at the presentation in slide sorter view when I'm working on my presentation. You'll also see that they organize the table of contents into the various sections.
+There are  some slides that are hidden in the presentation, I use them when I'm looking at the presentation in slide sorter view when I'm working on my presentation. You'll also see that they organize the table of contents into the various sections.
+
+Occasionaly I did take a bit of a shortcut for some of the output and just stuck it into a text box instead of trying to get the 'right' markdown to make it look good. (I did say that I thought markdown was an abomintation, right?).
+
+Speaking of AI, I actually built this whole document myself with the exception of the table of contents which I had AI build for me.
 
 If you have any feedback, please reach out: richard.soule@talan.com.
 
 This content was updated in June 2026 for the Kscope26 in Aurora Colorado.
 
 # Table of Contents
+
+TODO: Have AI replace this with a table of contents that points at each slide.
 
 # The Slides
 
@@ -226,7 +233,7 @@ Root container install might be useful if you are hosting hundreds or thousands 
 ### Slide 24 - Download APEX
 Or just go to https://apex.oracle.com/download
 
-### Slide 25 - Get APEX Link
+### Slide 25 - Get APEX Download URL
 
 ### Slide 26 - Download and extract APEX
 [oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
@@ -240,7 +247,7 @@ HTTP request sent, awaiting response... 200 OK
 Length: 325993509 (311M) [application/zip]  
 Saving to: ‘apex_26.1.zip’  
 
-apex_26.1.zip           100%[==============================>] 310.89M  54.3MB/s    in 6.8s  
+apex_26.1.zip           100%[================>] 310.89M  54.3MB/s    in 6.8s  
 
 2026-06-05 17:03:37 (46.0 MB/s) - ‘apex_26.1.zip’ saved [325993509/325993509]
 
@@ -251,11 +258,11 @@ unzip -q apex_26.1.zip
 ```
 
 ### Slide 27 - Install APEX component in a pluggable database
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/26.1] 
+[oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1] 
 ```bash
 cd apex
 ```
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/26.1/apex]
+[oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1/apex]
 ```bash
 sql sys@orcl as sysdba
 ```
@@ -274,18 +281,18 @@ http://host:port/ords/apex
 timing for: Phase 3 (Switch)  
 Elapsed:    0.17  
 timing for: Complete Installation  
-Elapsed:    7.77  
+Elapsed:    7.77  <-- Under 10 minutes on my desktop VM  
 SYS> exit  
 Disconnected from Oracle AI Database 26ai Enterprise Edition Release 23.26.2.0.0 - Production
 Version 23.26.2.0.0
 
 ### Slide 29 - A note about tablespaces
-SYS@orcl AS SYSDBA> @apexins sysaux sysaux temp /i/  
+SYS@orcl AS SYSDBA> @apexins **sysaux** sysaux temp /i/  
 SYSAUX is totally fine, but feel free to create your own tablespace if you want.  
 The APEX repository and packages are stored here, along with your APEX application metadata.  
 This becomes the default tablespace for the APEX schema. Note that other Oracle Database components also use SYSAUX for storage.
 
-SYS@orcl AS SYSDBA> @apexins sysaux sysaux temp /i/  
+SYS@orcl AS SYSDBA> @apexins sysaux **sysaux** temp /i/  
 SYSAUX is fine if you are not doing a lot of document uploads, but if you are building something like a content management application with APEX document upload capability, consider creating a tablespace to hold the documents. Maybe named APEX_DOCUMENT_UPLOADS.   Files uploaded to APEX are stored here.  
 This becomes the default tablespace for the FLOWS_FILES database schema.
 
@@ -440,7 +447,7 @@ SYS@orcl AS SYSDBA >
 |----------------|--------------|---------|---------|
 | JServer JAVA Virtual Machine | 23.26.2.0.0 | VALID | SYS |
 | OLAP Analytic Workspace | 23.26.2.0.0 | VALID | SYS |
-| **Oracle APEX** | **26.1.0** | **VALID** | **APEX_260100** |
+| **Oracle APEX** | **26.1.1** | **VALID** | **APEX_260100** |
 | Oracle Database Catalog Views | 23.26.2.0.0 | VALID | SYS |
 | Oracle Database Java Packages | 23.26.2.0.0 | VALID | SYS |
 | Oracle Database Packages and Types | 23.26.2.0.0 | VALID | SYS |
@@ -553,17 +560,18 @@ SYS@orcl AS SYSDBA >
 ```sql
 info apex_release
 ```
-Columns 
-NAME                DATA TYPE              NULL  DEFAULT    COMMENTS
- VERSION_NO         VARCHAR2(32767 BYTE)   Yes              The specific version number of this Oracle APEX
-                                                            instance
+```text
+Columns   
+NAME                DATA TYPE              NULL  DEFAULT    COMMENTS  
+ VERSION_NO         VARCHAR2(32767 BYTE)   Yes              The specific version number of this Oracle APEX  
+                                                            instance  
  API_COMPATIBILITY  VARCHAR2(32767 BYTE)   Yes              The version of the API that this release is
                                                             compatible with for importing applications or
                                                             components
  APEXLANG_VERSION   VARCHAR2(32767 BYTE)   Yes              The specific version number of APEXlang
  PATCH_APPLIED      VARCHAR2(32767 BYTE)   Yes              Reserved for internal use during Oracle APEX
                                                             upgrade
-
+```
 
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -572,53 +580,66 @@ SYS@orcl AS SYSDBA >
 ```
 no rows selected
 
-### Slide 39 - Get the latest APEX patch (24.2 Shown!!!)
+### Slide 39 - Get the latest APEX patch 
 
-### Slide 40 - Get the latest APEX patch (24.2 Shown!!!)
+### Slide 40 - Get the latest APEX patch 
 
-### Slide 40 - Get the latest APEX patch (24.2 Shown!!!)
+### Slide 41 - Get the latest APEX patch  
 
-### Slide 41 - Get the latest APEX patch  (24.2 Shown!!!)
+### Slide 42 - Get the latest APEX patch  
+https://carsandcode.com/2026/06/09/generating-an-oracle-support-access-token-to-work-with-an-oracle-support-wget-sh-script/
 
-### Slide 42 - Get the latest APEX patch  (24.2 Shown!!!)
+The magic URL Oracle doesn't tell you about:
 https://updates.oracle.com/Orion/GenToken/get_token
 
 
-### Slide 43 - Download and extract APEX patch (24.2 Shown!!!)
-[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/24.2]
+### Slide 43 - Download and extract APEX patch 
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
+```bash
 vim token.txt
-
-[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/24.2]
+```
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
+```bash
 vim wget.sh 
+```
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
+```bash
+chmod u+x wget.sh 
+```
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
+```bash
+./wget.sh -T token.txt
+```
+NOTE: The script may close your terminal window, so log back in and           get back to your download directory
 
-[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/24.2]
-source wget.sh -T token.txt
-
-[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/24.2]
-unzip -q p37366599_2420_Generic.zip
-
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
+```bash
+unzip -q p39179920_261_Generic.zip
+```
 ### Slide 44 - Install latest APEX patch in the database
-[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/24.2]
-cd p37366599
-
-[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/24.2/37366599]
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
+```bash
+cd 39179920
+```
+[oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1/39179920]
 sql sys@orcl as sysdba
 SYS@orcl AS SYSDBA> 
-```sql @catpatch
+```sql 
+@catpatch
 ```
-Timing command is obsolete in sqlcl.
-Use SET TIMING ON and SET TIMING OFF.  <-- Sigh
-. ORACLE
-.
-. Oracle APEX 24.2.%
-. Patch Set Exception 37366599
-........................................
-APEX_VERSION    APEX_SCHEMA
-_______________ ______________
-24.2.0          APEX_240200
-[SNIP]
-Timing command is obsolete in sqlcl.
-Use SET TIMING ON and SET TIMING OFF.  <-- Sigh, but under 10 seconds.
+
+. ORACLE  
+.  
+. Oracle APEX 26.1.%  
+. Patch Set Exception 39179920  
+........................................  
+| APEX_VERSION | APEX_SCHEMA
+| ------------ | -----------
+| 26.1.1 |  APEX_240200
+
+[SNIP]  
+timing for: Complete Patch 39179920  
+Elapsed:    0.32 <-- Less than one minute
 
 ### Slide 45 - What does the database now tell us about APEX?
 SYS@orcl AS SYSDBA> 
@@ -626,19 +647,19 @@ SYS@orcl AS SYSDBA>
 select *
   from apex_release;
 ```  
-VERSION_NO    API_COMPATIBILITY    PATCH_APPLIED
-_____________ ____________________ ________________
-24.2.16       2024.11.30           APPLIED <-- This time it is true! 
-
+```text
+VERSION_NO    API_COMPATIBILITY    APEXLANG_VERSION    PATCH_APPLIED
+_____________ ____________________ ___________________ ________________  
+26.1.1        2026.03.30           26.1.0+3102         APPLIED   <-- This time it is true! 
+```
 SYS@orcl AS SYSDBA> 
 ```sql
 select * 
   from apex_patches;
-```  
-                                       ID    PATCH_NUMBER PATCH_VERSION    IMAGES_VERSION    IS_BUNDLE_PATCH    INSTALLED_ON
-_________________________________________ _______________ ________________ _________________ __________________ ______________________
-   111748605951444204074101818349635412617       37366599 10               24.2.16           Yes                2026-06-12 11:30:45
-
+```
+```text
+ID    PATCH_NUMBER PATCH_VERSION   IMAGES_VERSION    APEXLANG_VERSION   IS_BUNDLE_PATCH    INSTALLED_ON                                        _________________________________________________________ _________________________________ _____________________________________ ______________________                                            112054776747915620883576848747624124609        39179920 1                26.1.1            26.1.0+3102         Yes                2026-06-15 09:52:02
+```
 SYS@orcl AS SYSDBA> 
 ```sql
 select comp_name
@@ -648,26 +669,25 @@ select comp_name
  ```
     COMP_NAME     VERSION_FULL
 ______________ _______________
-Oracle APEX    24.2.16
-
+Oracle APEX    26.1.1
 
 ### Slide 46 - Did security change?
 NO  
 No new schemas with logins.  
 New APIs, but nothing that 100 brilliant developers  
-could have done with a few decades of development time.
+couldn't have done with a few decades of development time.
 
 ### Slide 47 - What did you just deliver to your database developers?
 https://apex.oracle.com/api
 
 ### Slide 48 - 01 Install APEX Component (REQUIRED)
 You can stop here, and you have still delivered incredible value!  
-Enable developers to leverage the APEX component APIs within the database
+Enable database developers to leverage the APEX component APIs within the database
 
 ## Slide 49 - Solution #2 - hidden 
 
 ### Slide 50 - 02 Reach Out Of The Database (Optional)
-Enable developers to leverage the APEX APIs to reach web services
+Enable database developers to leverage the APEX APIs to reach web services, email, etc.
 
 ### Slide 51 - Security is about to change!
 The database has provided UTL_HTTP packages for more than 25 years.  
@@ -679,29 +699,27 @@ SYS@orcl AS SYSDBA >
 select apex_web_service.make_rest_request('http://www.google.com','GET') as "Google";
 ```
 Error starting at line : 1 in command -
-select apex_web_service.make_rest_request('http://www.google.com','GET') as "Google"
-Error report -
-ORA-29273: HTTP request failed
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES", line 745
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 1032
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 634
-ORA-24247: network access denied by access control list (ACL)
-ORA-06512: at "SYS.UTL_HTTP", line 380
-ORA-06512: at "SYS.UTL_HTTP", line 1189
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 588
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 825
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 1387
-ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES", line 702
-ORA-06512: at "APEX_260100.WWV_FLOW_WEBSERVICES_API", line 670
-ORA-06512: at line 1
-Help: https://docs.oracle.com/error-help/db/ora-29273/
+select apex_web_service.make_rest_request('http://www.google.com','GET') as "Google"  
+Error report -  
+ORA-29273: HTTP request failed  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES", line 745  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 1032  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 634  
+ORA-24247: network access denied by access control list (ACL)  
+ORA-06512: at "SYS.UTL_HTTP", line 380  
+ORA-06512: at "SYS.UTL_HTTP", line 1189  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 588  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 825  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES_INVOKER", line 1387  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEB_SERVICES", line 702  
+ORA-06512: at "APEX_260100.WWV_FLOW_WEBSERVICES_API", line 670  
+ORA-06512: at line 1  
+Help: https://docs.oracle.com/error-help/db/ora-29273/  
 
-
-More Details :
-https://docs.oracle.com/error-help/db/ora-29273/
-https://docs.oracle.com/error-help/db/ora-06512/
+More Details :  
+https://docs.oracle.com/error-help/db/ora-29273/  
+https://docs.oracle.com/error-help/db/ora-06512/  
 https://docs.oracle.com/error-help/db/ora-24247/
-
 
 ### Slide 53 - The easy button
 SYS@orcl AS SYSDBA>
@@ -734,7 +752,9 @@ select apex_web_service.make_rest_request('https://www.google.com','GET') as "Se
 ```
 Secure Google                                                                       
 ___________________________________________________________________________________ 
-<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en"    
+<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en"     
+
+19.17 or earlier you need a tls wallet for https connections. See appendix.
 
 ### Slide 55 - Add a self signed cert to the OS certificate store
 [root@databaseserver ~ ]
@@ -774,22 +794,22 @@ begin
 end;
 /
 ```
-connect  
-   Access a network service using utl_tcp,utl_smtp, utl_mail, utl_http, dbms_ldap  
-http  
-   http only  
-smtp  
-   smtp only  
-resolve  
-   Resolve network IPs or hostnames through utl_inaddr  
-jdwp  
-   Java Debug Wire Protocol operations  
-http_proxy  
-   Used in conjunction with http to allow proxy connections  
+- connect  
+    Access a network service using utl_tcp,utl_smtp, utl_mail, utl_http, dbms_ldap  
+- http  
+    http only  
+- smtp  
+    smtp only  
+- resolve  
+    Resolve network IPs or hostnames through utl_inaddr  
+- jdwp  
+    Java Debug Wire Protocol operations  
+- http_proxy  
+    Used in conjunction with http to allow proxy connections  
 
 ### Slide 58 - 02 Reach Out Of The Database (Optional)
 You can stop here, and you have still delivered incredible value!
-Enable developers to leverage the APEX APIs to reach web services
+Enable database developers to leverage the APEX APIs to reach web services, email, etc.
 
 ## Slide 59 - Solution #3 - hidden 
 
@@ -798,11 +818,11 @@ Let developers use APEX to build and deploy web applications, build REST service
 
 ### Slide 61 - Oracle REST Data Services (ORDS)
 ORDS is a Java application that enables toolsets:
-Oracle APEX  
-- The worlds best low code development tool.
-Oracle SQL Developer Web (né Oracle Database Actions)  
-- A browser-based tool with development and monitoring capabilities.
-REST Enabled Database Services
+- Oracle APEX  
+    The worlds best low code development tool.
+- Oracle SQL Developer Web (né Oracle Database Actions)  
+    A browser-based tool with development and monitoring capabilities.
+- REST Enabled Database Services
 
 Also includes:
 - GraphQL support
@@ -812,7 +832,7 @@ Also includes:
 ### Slide 62 - Oracle REST Data Services (ORDS)
 ORDS also includes an embedded web server
 
-### Slide 64 - Where should ords be deployed?
+### Slide 63 - Where should ords be deployed?
 It doesn’t really* matter. ORDS is quite small.
 - Many thousands of deployments directly on database servers as either the root user or the oracle user.
 - Many thousands of deployments on web or application servers as the root user, or maybe another user using ORDS standalone.
@@ -822,7 +842,7 @@ It doesn’t really* matter. ORDS is quite small.
 
 ### Slide 64 - User access ports: 443 or 80 or 1024 or higher?
 * Port 443 (default https port)  
-    This should always be the port that end users and developers use to get to your applications.  
+    This should **always** be the port that end users and developers use to get to your applications.  
     Users don’t have to put in a port number and modern browsers expect you to use TLS (https) requests.  
     Requires access to a privileged OS account to run the service on Unix OS or you can use iptables/firewalld to redirect 443 to a port ≥ 1024 (see bonus content at the end of the presentation).  
     If you don’t have a signed certificate, modern browsers will mark the site insecure. 
@@ -837,106 +857,108 @@ It doesn’t really* matter. ORDS is quite small.
    If you don’t have a signed certificate, modern browsers will mark the site insecure.
  
 ### Slide 65 - Security is about to change even more!
-We are now going to create new and unlock existing schemas to enable browser-based applications and REST services.
-These schemas purely for middleware connection pools, passwords are only for DBAs.
+We are going to create a new connection pool schema in the database. ORDS will connect to the database using this account.
 
-Slide 82 - Unlocking and creating new accounts?
+This account is purely for ORDS, nobody needs to know the password.
+
+### Slide 66 - Creating new account with password?
 Profiles Matter!
 SYS@orcl AS SYSDBA> 
+```sql
 select profile
      , limit                      
   from dba_profiles
  where profile = 'DEFAULT'
    and resource_name = 'PASSWORD_LIFE_TIME';
-PROFILE    LIMIT
-DEFAULT    180
+```
+
+| PROFILE | LIMIT |
+|---------|-------|
+| DEFAULT | 180 |
+
 “It just stopped working… We didn’t change a thing!”
 
-SYS@orcl AS SYSDBA> alter profile default limit password_life_time unlimited;
-Profile DEFAULT altered.
-(Or create a new profile and assign it to the ORDS connection pool account, ORDS_PUBLIC_USER)
-
-Slide 83 - Unlock apex_public_user
-The Oracle APEX installation documentation currently says to do this:
 SYS@orcl AS SYSDBA> 
-alter user apex_public_user identified by oracle_4U account unlock;
-User altered.
-However, you really only need to unlock the account and ensure it won’t expire.
-I had support create the following bugs:
-DOC 38011311 - APEX INSTALLATION GUIDE: APEX_PUBLIC_USER SHOULD NOT HAVE A RANDOM PASSWORD
-BUG 38011333 - APEX INSTALLATION GUIDE: APEX_PUBLIC_USER SHOULD BE CREATED WITH "NO AUTHENTICATION"
-SR 3-42740624341 : BUG: APEX_PUBLIC_USER is created locked by apexins script, which is incorrect
+```sql
+alter profile default limit password_life_time unlimited;
+```
+Profile DEFAULT altered.  
 
-The below is not officially supported (yet!), but it works!
-SYS@orcl AS SYSDBA> alter user apex_public_user account unlock no authentication;
-User altered.
+(Or create a new profile and assign it to the ORDS connection pool account, ORDS_PUBLIC_USER)
+### Slide 67 - Doc Bugs Abound!
 
-Slide 84 - What about apex_rest_config.sql?
-I believe this is a doc bug and have filed a doc bug with Oracle Support…
-We have many installations using ORDS with static files without running the apex_rest_config.sql script. 
-I’ve been told in the past by the APEX team that if you used APEX 5.0 or earlier and you created REST services 
-directly in APEX 5.0 or earlier, then this script will make those old services continue to work.
-Installation documentation section 6.5.3 Configuring Static File Support
-
-Bug: 38029040 : DOCUMENTATION STATES "YOU MUST RUN APEX_REST_CONFIG.SQL" WHICH MAY BE INCORRECT
-
-Slide 85 - Download ORDS
+### Slide 68 - Download ORDS
 https://www.oracle.com/database/sqldeveloper/technologies/db-actions/download/
 or
 https://download.oracle.com/otn_software/java/ords/ords-latest.zip
 or
 Just google "download oracle ords"
 
-Slide 86 - Download ORDS source
+### Slide 69 - Download ORDS source
 [root@applicationserver /usr/local/src/oracle/ords]
 ```bash
 wget https://download.oracle.com/otn_software/java/ords/ords-26.1.2.140.1916.zip
 ```
---2026-06-13 08:04:22--  https://download.oracle.com/otn_software/java/ords/ords-26.1.2.140.1916.zip
-Resolving download.oracle.com (download.oracle.com)... 23.213.44.100
-Connecting to download.oracle.com (download.oracle.com)|23.213.44.100|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 189626144 (181M) [application/zip]
-Saving to: ‘ords-26.1.2.140.1916.zip’
+--2026-06-13 08:04:22--  https://download.oracle.com/otn_software/java/ords/ords-26.1.2.140.1916.zip  
+Resolving download.oracle.com (download.oracle.com)... 23.213.44.100  
+Connecting to download.oracle.com (download.oracle.com)|23.213.44.100|:443... connected.  
+HTTP request sent, awaiting response... 200 OK  
+Length: 189626144 (181M) [application/zip]  
+Saving to: ‘ords-26.1.2.140.1916.zip’  
 
 ords-26.1.2.140.1916.zi 100%[============================>] 180.84M  51.6MB/s    in 3.7s    
 
 2026-06-13 08:04:26 (48.2 MB/s) - ‘ords-26.1.2.140.1916.zip’ saved [189626144/189626144]
 
+### Slide 70 - Create ORDS directories
+[root@applicationserver ~]
+```bash  
+mkdir -p /opt/ords/26.1
+```
+<-- Runtime  
+[root@applicationserver ~]
+```bash
+mkdir -p /etc/ords/orlc/26.1
+```
+<-- Configuration  
+[root@applicationserver ~]
+```bash
+mkdir -p /var/www/html/i
+```
+<-- Document Root (without the i) & APEX images (with the i)  
+[root@applicationserver ~]
+```bash
+mkdir -p /var/log/ords/26.1
+```
+<-- Logs (optional)  
+Windows? d:\ords_runtime\26.1, d:\ords_configuration\26.1, d:\ords_document_root\i, d:\ords_logs\26.1
 
-Slide 87 - Create ORDS directories
-[root@applicationserver ~]
-mkdir -p /opt/ords/25.3       <-- Runtime
-[root@applicationserver ~]
-mkdir -p /etc/ords/25.3       <-- Configuration
-[root@applicationserver ~]
-mkdir -p /var/www/html/i      <-- Document Root (without the i) & APEX images (with the i)
-[root@applicationserver ~]
-mkdir -p /var/log/ords/25.3   <-- Logs (optional)
-Windows? d:\ords_runtime\25.3, d:\ords_configuration\25.3, d:\ords_document_root\i, d:\ords_logs\25.3
-
-Slide 88 - Choose an option for APEX static images
+### Slide 71 - Choose an option for APEX static images
 1. Use the Oracle Content Delivery Network
 2. Deploy (and patch) the APEX images directly on your ORDS server
 
-Slide 89 - Option 1: Use Oracle's content delivery (preferred)
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2/apex/utilities]
+### Slide 72 - Option 1: Use Oracle's content delivery (preferred)
+[oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1/apex/utilities]
+```bash
 sql sys@orcl as sysdba
+```
 SYS@orcl AS SYSDBA> 
+```sql
 @reset_image_prefix
-Enter the Oracle APEX image prefix [/i/] https://static.oracle.com/cdn/apex/24.2.10/
-...Changing Oracle APEX image prefix
-                             NEW_IMAGE_PREFIX
-_____________________________________________
-https://static.oracle.com/cdn/apex/24.2.10/
+```
+Enter the Oracle APEX image prefix [/i/] https://static.oracle.com/cdn/apex/26.1.10/  
+...Changing Oracle APEX image prefix  
+|                             NEW_IMAGE_PREFIX  
+|---------------------------------------------
+| https://static.oracle.com/cdn/apex/26.1.10/
 
-PL/SQL procedure successfully completed.
-...Recreate APEX global
-PL/SQL procedure successfully completed.
-Commit complete.
+PL/SQL procedure successfully completed.  
+...Recreate APEX global  
+PL/SQL procedure successfully completed.  
+Commit complete.  
 Image Prefix update complete
 
-Slide 90 - Option 2: Manually maintain apex images
+### Slide 73 - Option 2: Manually maintain apex images
 [root@applicationserver /var/www/html/i]
 ```bash
 cp -R /usr/local/src/oracle/apex/26.1/apex/images/* .
@@ -944,21 +966,23 @@ cp -R /usr/local/src/oracle/apex/26.1/apex/images/* .
 
 [root@applicationserver /var/www/html/i]
 ```bash
-\cp -R /usr/local/src/oracle/apex/26.1/<patch-number>/images/* .
+\cp -R /usr/local/src/oracle/apex/26.1/39179920/images/* .
 ```
-Images can be anywhere… But /var/www/html is the default Unix place for files that are served to web users. 
-APEX uses /i/ as the default images location, so an i directory in /var/www/html is the ‘right’ place to put the images.
+Images can be anywhere…  
+But /var/www/html is the default Unix place for files that are served to web users.  
+APEX uses /i/ as the default images location, so an i directory in /var/www/html is the ‘right’ place to put the images.  
+
 The \cp (instead of just cp) in the 2nd command stops the prompts for overwriting the files as the root user typically has cp aliased to "cp -i".
 
-Slide 91 - Create ORDS runtime
+### Slide 74 - Create ORDS runtime
 [root@applicationserver /opt/ords/26.1]
 ```bash
 unzip -q /usr/local/src/oracle/ords/ords-26.1.2.140.1916.zip 
 ```
-
 [root@applicationserver /opt/ords/26.1]
 ```bash
 ll
+```
 ```
 total 183164
 drwxr-xr-x 2 root root        54 May 20 19:46 bin
@@ -972,10 +996,10 @@ drwxr-xr-x 3 root root        86 May 20 19:46 linux-support
 -rw-r--r-- 1 root root 187540970 May 20 19:46 ords.war
 drwxr-xr-x 4 root root        38 May 20 12:20 scripts
 -rw-r--r-- 1 root root       365 May 20 18:43 THIRD-PARTY-LICENSES.txt
+```
 
-
-Slide 92 - ORDS runtime details
-[root@applicationserver /opt/ords/25.3]
+### Slide 75 - ORDS runtime details
+[root@applicationserver /opt/ords/26.1]
 ```bash
 tree bin
 ```
@@ -985,7 +1009,7 @@ bin
 ├── ords.exe          <-- Windows executable
 └── ords-metrics      <-- Oracle Cloud Infrastructure (OCI) monitoring tool
 ```
-[root@applicationserver /opt/ords/25.3]
+[root@applicationserver /opt/ords/26.1]
 ```bash
 tree scripts
 ```
@@ -1003,7 +1027,7 @@ scripts
     └── ords_migrate_workspace_rest.sql
 ```
 
-### Slide 93 - Configure ORDS
+### Slide 76 - Create ORDS Instance
 [root@applicationserver /opt/ords/26.1/bin]
 ```bash
 ./ords --config /etc/ords/orcl/26.1 install
@@ -1029,7 +1053,8 @@ Oracle REST Data Services - Interactive Install
 Retrieving information.  
 ORDS is not installed in the database. ORDS installation is required.
 
-Slide 94 - Configure ORDS (continued)
+### Slide 77 - Create ORDS Instance (continued)
+```text
   Enter a number to update the value or select option A to Accept and Continue
     [1] Connection Type: Basic
     [2] Basic Connection: HOST=databaseserver.my-apex-box.com PORT=1521 SERVICE_NAME=orcl.my-apex-box.com
@@ -1044,8 +1069,9 @@ Slide 94 - Configure ORDS (continued)
     [A] Accept and Continue - Create configuration and Install ORDS in the database
     [Q] Quit - Do not proceed. No changes
   Choose [A]:
-
-Slide 95 - Configure ORDS (continued)
+```
+### Slide 78 - Create ORDS Instance (continued)
+```text
   Enter a number to update the value or select option A to Accept and Continue
     [1] Connection Type: Basic
     [2] Basic Connection: HOST=databaseserver.my-apex-box.com PORT=1521 SERVICE_NAME=orcl.my-apex-box.com
@@ -1062,9 +1088,9 @@ Slide 95 - Configure ORDS (continued)
     [A] Accept and Continue - Create configuration and Install ORDS in the database
     [Q] Quit - Do not proceed. No changes
   Choose [A]: A
-
-Slide 96 - ORDS is now running
-
+```
+### Slide 79 - ORDS is now running
+```text
 The setting named: db.connectionType was set to: basic in configuration: default
 The setting named: db.hostname was set to: databaseserver.my-apex-box.com in configuration: default
 The setting named: db.port was set to: 1521 in configuration: default
@@ -1127,13 +1153,14 @@ Mapped local pools from /etc/ords/orcl/26.1/databases:
 Oracle REST Data Services version : 26.1.2.r1401916
 Oracle REST Data Services server info: jetty/12.0.34
 Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM  (build 21.0.10+8-LTS-217 mixed mode, sharing)
+```
 
-
-
-
-Slide 97 - What happened in our configuration directory
+### Slide 80 - What happened in our configuration directory
 [root@applicationserver ~]
+```bash
 tree /etc/ords/orcl/26.1  
+```
+```text
 /etc/ords/orcl/26.1  
 ├── databases  
 │   └── default  
@@ -1145,8 +1172,8 @@ tree /etc/ords/orcl/26.1
     └── standalone            <-- Directory created if you start ORDS standalone with self-signed certs  
         ├── self-signed.key   <-- Generated self-signed certificate key  
         └── self-signed.pem   <-- Generated self-signed certificate  
-
-Slide 98 - What is in pool.xml?
+```
+### Slide 81 - What is in pool.xml?
 [root@applicationserver ~]
 ```bash
 cat /etc/ords/orcl/26.1/databases/default/pool.xml
@@ -1167,10 +1194,12 @@ cat /etc/ords/orcl/26.1/databases/default/pool.xml
 <entry key="security.requestValidationFunction">ords_util.authorize_plsql_gateway</entry>
 </properties>
 ```
-
-Slide 99 - What is in settings.xml?
+### Slide 82 - What is in settings.xml?
 [root@applicationserver ~]
-\# cat /etc/ords/orcl/26.1/global/settings.xml 
+```bash
+ cat /etc/ords/orcl/26.1/global/settings.xml 
+ ```
+ ```text
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
@@ -1181,15 +1210,20 @@ Slide 99 - What is in settings.xml?
 <entry key="standalone.https.port">443</entry>
 <entry key="standalone.static.path">/var/www/html/i</entry>
 </properties>
+```
 
+### Slide 83 - ORDS works!
 
-Slide 100 - ORDS works!
-
-Slide 101 - Create an APEX admin user and password
-[oracle@databaseserver DB:orclcon /usr/local/src/oracle/apex/24.2/apex]
+### Slide 84 - Create an APEX admin user and password
+[oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1/apex]
+```bash
 sql sys@orcl as sysdba
+```
 SYS@orcl AS SYSDBA> 
+```sql
 @apxchpwd
+```
+```text
 ...set_appun.sql
 ================================================================================
 This script can be used to change the password of an Oracle APEX
@@ -1202,59 +1236,58 @@ User "ADMIN" does not yet exist and will be created.
 Enter ADMIN's email [ADMIN] richard.soule@talan.com
 Enter ADMIN's password [] ************************
 Created instance administrator ADMIN.
+
 SYS@orcl AS SYSDBA> exit
+```
+### Slide 85 - Login to APEX
 
-Slide 102 - Login to APEX
+### Slide 86 - Success!
 
-Slide 103 - Success!
+### Slide 87 - Service URLs
+ORDS Landing Page  
+   https://yourserver.com  
+Oracle APEX  
+   https://yourserver.com/ords/apex  
+Oracle SQL Developer Web (né Oracle Database Actions)  
+   https://yourserver.com/ords/sql-developer  
+REST Enabled Database Services  
+   https://yourserver.com/ords/bookstore/api/catalog  
 
-Slide 104 - Service URLs
-ORDS Landing Page
-   https://yourserver.com
-Oracle APEX
-   https://yourserver.com/ords/apex
-Oracle SQL Developer Web (né Oracle Database Actions)
-   https://yourserver.com/ords/sql-developer
-REST Enabled Database Services
-   https://yourserver.com/ords/bookstore/api/catalog
-
-Slide 105 - Cool/Good URLs
-In 1998 Sir Tim Berners Lee wrote about what makes a cool URL.*
-Literally nothing has changed about good URLs since then.
+### Slide 88 - Cool/Good URLs
+In 1998 Sir Tim Berners Lee wrote about what makes a cool URL.*  
+Literally nothing has changed about good URLs since then.  
 NOTHING.
 
 https://www.w3.org/Provider/Style/URI
 
 *At the time, there was confusion about URI vs. URL, and there still is… see https://danielmiessler.com/study/difference-between-uri-url/ for details if you are curious.
 
-Slide 106 - Default service URLs are bad according to Sir Tim
-Oracle APEX
-   https://yourserver.com/ords/apex
-Oracle SQL Developer Web (né Oracle Database Actions)
-   https://yourserver.com/ords/sql-developer
-REST Enabled Database Services
-   https://yourserver.com/ords/bookstore/api/catalog
+### Slide 89 - Default service URLs are bad according to Sir Tim
+Oracle APEX  
+   https://yourserver.com/ords/apex  
+Oracle SQL Developer Web (né Oracle Database Actions)  
+   https://yourserver.com/ords/sql-developer  
+REST Enabled Database Services  
+   https://yourserver.com/ords/bookstore/api/catalog  
 
-Slide 107 - Let’s fix those URLs…
-Oracle APEX
-   https://yourserver.com/app/apex
-Oracle SQL Developer Web (né Oracle Database Actions)
-   https://yourserver.com/app/sql-developer
-REST Enabled Database Services
-   https://yourserver.com/app/bookstore/api/catalog
+### Slide 90 - Let’s fix those URLs…
+Oracle APEX  
+   https://yourserver.com/app/apex  
+Oracle SQL Developer Web (né Oracle Database Actions)  
+   https://yourserver.com/app/sql-developer  
+REST Enabled Database Services  
+   https://yourserver.com/app/bookstore/api/catalog  
 
-Slide 108 - …and other things with poor defaults
-standalone.doc.root=/etc/ords/25.3/global/doc_root
-2025-10-15T21:29:37.012Z WARNING     *** jdbc.MaxLimit in configuration |default|lo| is using a value of 10, this setting may not be sized adequately for a production environment ***
-2025-10-15T21:29:37.298Z INFO
-Mapped local pools from /etc/ords/25.3/databases:
+### Slide 91 - …and other things with poor defaults
+2026-06-13T16:16:07.387Z INFO        HTTP and HTTP/2 cleartext listening on host: 0.0.0.0 port: 8080  
+standalone.doc.root=/etc/ords/orcl/26.1/global/doc_root  
+2026-06-13T16:16:08.919Z WARNING  jdbc.MaxLimit in configuration |default|lo| is using a value of 10, this setting may not be sized adequately for a production environment  
+2026-06-13T16:16:09.179Z INFO Mapped local pools from /etc/ords/orcl/26.1/databases:  
   /ords/                              => default                        => VALID
-2025-10-15T21:29:37.446Z INFO        Oracle REST Data Services initialized
-racle REST Data Services version : 25.3.0.r1001652
-Oracle REST Data Services server info: jetty/12.0.13
-Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM  (build: 20.0.1+9-29 mixed mode, sharing)
 
-Slide 109 - Stop ORDS
+
+### Slide 92 - Stop ORDS Instance
+```text
 2026-06-13T16:16:08.919Z WARNING     *** jdbc.MaxLimit in configuration |default|lo| is using a value of 10, this setting may not be sized adequately for a production environment ***
 2026-06-13T16:16:09.089Z INFO        Created Pool: |default|lo|-2026-06-13T16-16-08.867968415Z at: 2026-06-13T16:16:08.867968415Z
 2026-06-13T16:16:09.179Z INFO        
@@ -1267,80 +1300,103 @@ Mapped local pools from /etc/ords/orcl/26.1/databases:
 Oracle REST Data Services version : 26.1.2.r1401916
 Oracle REST Data Services server info: jetty/12.0.34
 Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM  (build 21.0.10+8-LTS-217 mixed mode, sharing)
-
-
+```
 ^C <-- Ctrl-c to kill the running process
 
-Slide 110 - Reconfigure ords settings
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set standalone.doc.root /var/www/html
-ORDS: Release 25.3 Production on Wed Oct 15 15:27:16 2025
-Copyright (c) 2010, 2025, Oracle.
-Configuration:
-  /etc/ords/25.3[root@applicationserver /opt/ords/25.3/bin]
+### Slide 93 - Configure ords settings
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set standalone.doc.root /var/www/html
+```
+ORDS: Release 26.1 Production on Sat Jun 13 16:50:58 2026  
+Copyright (c) 2010, 2026, Oracle.  
+Configuration:  /etc/ords/orcl/26.1  
+The global setting named: standalone.doc.root was set to: /var/www/html  
 
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set standalone.context.path /app
-
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set jdbc.InitialLimit 21
-
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set jdbc.MinLimit 21
-
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set jdbc.MaxLimit 21
-
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set standalone.access.log /var/log/ords/25.3
-
-[root@applicationserver /opt/ords/25.3/bin]
-# ./ords --config /etc/ords/25.3 config set standalone.access.log.retainDays 5
-
-Slide 111 - Configure ords directories to be more maintainable
-Today
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set standalone.http.port 80
+```
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set standalone.context.path /app
+```
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set jdbc.InitialLimit 21
+```
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set jdbc.MinLimit 21
+```
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set jdbc.MaxLimit 21
+```
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set standalone.access.log /var/log/ords/26.1
+```
+[root@applicationserver /opt/ords/26.1/bin]
+```bash
+./ords --config /etc/ords/orcl/26.1 config set standalone.access.log.retainDays 5
+```
+### Slide 94 - Configure ords directories to be more maintainable
+Today  
 [root@applicationserver /opt/ords]
+```bash
 ln -s 25.3 latest
-
+```
 [root@applicationserver /opt/ords]
-cd /etc/ords
-
-[root@applicationserver /etc/ords]
+```bash
+cd /etc/ords/orcl
+```
+[root@applicationserver /etc/ords/orcl]
+```bash
 ln -s 25.3 latest
-
-The Future
+```
+The Future  
 [root@applicationserver /opt/ords]
+```bash
 unlink latest
-
+```
 [root@applicationserver /opt/ords]
+```bash 
 ln -s 26.1 latest
-
+```
 [root@applicationserver /opt/ords]
+```bash
 cd /etc/ords
-
+```
 [root@applicationserver /etc/ords]
+```bash
 unlink latest
-
+```
 [root@applicationserver /etc/ords]
+```bash
 ln -s 26.1 latest
-
-Slide 112 - Restart and monitor ORDS
+```
+### Slide 95 - Restart and monitor ORDS
 [root@applicationserver ~]
-nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> /var/log/ords/25.3/ords-serve.log 2>&1 &
+```bash
+nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> /var/log/ords/orcl/26.1/ords-serve.log 2>&1 &
+```
 [1] 2263594
 
 [root@applicationserver ~]
-tail -f /var/log/ords/25.3/ords-serve.log
-
+```bash
+tail -f /var/log/ords/orcl/26.1/ords-serve.log
+```
+```text
 Mapped local pools from /etc/ords/latest/databases:
   /app/                               => default                        => VALID
 2025-10-15T17:08:43.508Z INFO        Oracle REST Data Services initialized
 Oracle REST Data Services version : 25.3.0.r1001652
 Oracle REST Data Services server info: jetty/12.0.13
+```
+### Slide 96 - It works!
 
-Slide 113 - It works!
-
-Slide 114 - What schemas changes after APEX & ORDS are installed?
+### Slide 97 - What schemas changes after APEX & ORDS are installed?
 SYS@orcl AS SYSDBA > 
   2  select username
   3       , account_status
@@ -1353,27 +1409,27 @@ SYS@orcl AS SYSDBA >
  10      or username like 'ORDS\_%' escape '\'
  11*  order by username;
 
-USERNAME              ACCOUNT_STATUS    EXPIRY_DATE    AUTHENTICATION_TYPE    ORACLE_MAINTAINED    
-_____________________ _________________ ______________ ______________________ ____________________ 
-APEX_260100           LOCKED                           NONE                   Y                    
-APEX_PUBLIC_ROUTER    OPEN                             NONE                   Y                    
-APEX_PUBLIC_USER      OPEN                             NONE                   Y                    
-FLOWS_FILES           LOCKED                           NONE                   Y                    
-ORDS_METADATA         OPEN                             NONE                   N                    
-ORDS_PUBLIC_USER      OPEN                             PASSWORD               N                    
+| USERNAME           | ACCOUNT_STATUS | EXPIRY_DATE | AUTHENTICATION_TYPE | ORACLE_MAINTAINED |
+|--------------------|----------------|-------------|---------------------|-------------------|
+| APEX_260100        | LOCKED         |             | NONE                | Y                 |
+| APEX_PUBLIC_ROUTER | OPEN           |             | NONE                | Y                 |
+| APEX_PUBLIC_USER   | OPEN           |             | NONE                | Y                 |
+| FLOWS_FILES        | LOCKED         |             | NONE                | Y                 |
+| ORDS_METADATA      | OPEN           |             | NONE                | N                 |
+| ORDS_PUBLIC_USER   | OPEN           |             | PASSWORD            | N                 |             
 
 6 rows selected.
 
-Two new locked accounts: 
-APEX_240200
-FLOWS_FILES
-Four new unlocked accounts, two with passwords:
-APEX_PUBLIC_ROUTER
-APEX_PUBLIC_USER  (has password, but doesn’t need it)
-ORDS_PUBLIC_USER  (has password)
+Four new unlocked accounts, only one with password:  
+APEX_PUBLIC_ROUTER  
+APEX_PUBLIC_USER  
+ORDS_PUBLIC_USER  (has password)  
 ORDS_METADATA
+Two new locked accounts: 
+APEX_260100  
+FLOWS_FILES
 
-Slide 115 - What components do you have after APEX & ORDS are installed?
+### Slide 98 - What components do you have after APEX & ORDS are installed?
 SYS@orcl AS SYSDBA >
 ```sql 
   select comp_name
@@ -1384,27 +1440,27 @@ SYS@orcl AS SYSDBA >
 order by comp_name;
 ```
 
-COMP_NAME                             VERSION_FULL    STATUS        SCHEMA         
-_____________________________________ _______________ _____________ ______________ 
-JServer JAVA Virtual Machine          23.26.2.0.0     VALID         SYS            
-OLAP Analytic Workspace               23.26.2.0.0     VALID         SYS            
-Oracle APEX                           26.1.0          VALID         APEX_260100    
-Oracle Database Catalog Views         23.26.2.0.0     VALID         SYS            
-Oracle Database Java Packages         23.26.2.0.0     VALID         SYS            
-Oracle Database Packages and Types    23.26.2.0.0     VALID         SYS            
-Oracle OLAP API                       23.26.2.0.0     VALID         OLAPSYS        
-Oracle Real Application Clusters      23.26.2.0.0     OPTION OFF    SYS            
-Oracle Text                           23.26.2.0.0     VALID         CTXSYS         
-Oracle Workspace Manager              23.26.2.0.0     VALID         WMSYS          
-Oracle XDK                            23.26.2.0.0     VALID         SYS            
-Oracle XML Database                   23.26.2.0.0     VALID         XDB            
-Spatial                               23.26.2.0.0     VALID         MDSYS          
+| COMP_NAME                          | VERSION_FULL | STATUS     | SCHEMA       |
+|------------------------------------|--------------|------------|--------------|
+| JServer JAVA Virtual Machine       | 23.26.2.0.0  | VALID      | SYS          |
+| OLAP Analytic Workspace            | 23.26.2.0.0  | VALID      | SYS          |
+| **Oracle APEX**                    | **26.1.1**   | **VALID**  | **APEX_260100** |
+| Oracle Database Catalog Views      | 23.26.2.0.0  | VALID      | SYS          |
+| Oracle Database Java Packages      | 23.26.2.0.0  | VALID      | SYS          |
+| Oracle Database Packages and Types | 23.26.2.0.0  | VALID      | SYS          |
+| Oracle OLAP API                    | 23.26.2.0.0  | VALID      | OLAPSYS      |
+| Oracle Real Application Clusters   | 23.26.2.0.0  | OPTION OFF | SYS          |
+| Oracle Text                        | 23.26.2.0.0  | VALID      | CTXSYS       |
+| Oracle Workspace Manager           | 23.26.2.0.0  | VALID      | WMSYS        |
+| Oracle XDK                         | 23.26.2.0.0  | VALID      | SYS          |
+| Oracle XML Database                | 23.26.2.0.0  | VALID      | XDB          |
+| Spatial                            | 23.26.2.0.0  | VALID      | MDSYS        |     
 
 13 rows selected. 
 
 Still 1 new component, ORDS isn’t a component
 
-Slide 116 - How many public synonyms after APEX & ORDS are installed?
+### Slide 99 - How many public synonyms after APEX & ORDS are installed?
 SYS@orcl AS SYSDBA > 
 ```sql
 select to_char(count(*),'99,999') as "Total Public Synonyms"
@@ -1416,7 +1472,7 @@ ________________________
 
 779 new public synonyms
 
-Slide 117 - Tablespaces after APEX & ORDS are installed
+### Slide 100 - Tablespaces after APEX & ORDS are installed
 
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -1451,32 +1507,44 @@ SYS@orcl AS SYSDBA >
 About 700 new Allocated MB
  and about 671 new Used MB
 
-Slide 118 - 03 Enable Access Into The Database (Optional)
-Let developers use APEX to build and deploy web applications, build REST services, and also enable SQL Developer Web
+### Slide 101 - 03 Enable Access Into The Database (Optional)
+Let developers use APEX to build and deploy web applications, build REST services, and also **enable SQL Developer Web**
 
-Slide 119 - SQL Developer Web
+### Slide 102 - SQL Developer Web
 
-Slide 120 - First REST enable schemas
+### Slide 103 - First REST enable schemas
 SYS@orcl AS SYSDBA> 
+```sql
 create user rich identified by rich;
-User RICH created.
+```
+User RICH created.  
 SYS@orcl AS SYSDBA> 
+```sql
 grant dba to rich;
-Grant succeeded.
+```
+Grant succeeded.  
 SYS@orcl AS SYSDBA> 
+```sql
 create user bob identified by bob;
-User BOB created.
-SYS@orcl AS SYSDBA> 
+```
+User BOB created.  
+SYS@orcl AS SYSDBA>
+```sql 
 grant create session to bob;
-Grant succeeded.
+```
+Grant succeeded.  
 SYS@orcl AS SYSDBA> 
+```sql
 exec ords_admin.enable_schema(p_schema => 'rich');
+```
 PL/SQL procedure successfully completed.
 SYS@orcl AS SYSDBA> 
+```sql
 exec ords_admin.enable_schema(p_schema => 'bob', p_url_mapping_pattern => 'coolguy');
+```
 PL/SQL procedure successfully completed.
 
-Slide 121 - What does the database tell us about rest schemas?
+### Slide 104 - What does the database tell us about rest schemas?
 SYS@orcl AS SYSDBA > 
 ```sql
 select parsing_schema
@@ -1486,109 +1554,155 @@ select parsing_schema
   from dba_ords_schemas;
 ```  
 
-PARSING_SCHEMA    STATUS     TYPE         PATTERN    
-_________________ __________ ____________ __________ 
-RICH              ENABLED    BASE_PATH    rich       
-BOB               ENABLED    BASE_PATH    coolguy    
+| PARSING_SCHEMA | STATUS  | TYPE      | PATTERN |
+|----------------|---------|-----------|---------|
+| RICH           | ENABLED | BASE_PATH | rich    |
+| BOB            | ENABLED | BASE_PATH | coolguy |
 
-Slide 122 - Logging in...
+### Slide 105 - Logging in...
 
-Slide 123 - Sweet stuff! Including new to 25.3 dark mode
+### Slide 106 - Sweet stuff!
 
-Slide 124 - Sweet stuff!
+### Slide 107 - Sweet stuff!
 
-Slide 125 - Sweet stuff!
+### Slide 108 - Sweet stuff!
 
-Slide 126 - AGENDA
+### Slide 109 - AGENDA
 We have covered three main topics:
 
-The Pre-APEX Database
-Install APEX Component (REQUIRED)
-Reach Out Of The Database (Optional)
-Enable Access Into The Database (Optional)
+00 The Pre-APEX Database  
+01 Install APEX Component (REQUIRED)  
+02 Reach Out Of The Database (Optional)  
+03 Enable Access Into The Database (Optional)  
 
-Slide 127 - hidden - Conclusion
+### Slide 110 - Conclusion - hidden
 
-Slide 128 - In Conclusion:
+### Slide 111 - In Conclusion:
 DBAs and System Admins should deliver APEX and ORDS for every database
 
 
-Slide 129 - The most important slide
+### Slide 112 - The most important slide
 https://github.com/RichardSoule/APEXandORDSforDBASandSysadmins
 
-Slide 130 - Thanks
+### Slide 113 - Thanks
 Rich
 Soule
-(512) 289-4020
 richard.soule@talan.com
 
-Slide 56 - 
+### Slide 114 Appendix - hidden
+
+### Slide 115 - 19.17 or earlier databases need a TLS Wallet for HTTPS
+SYS@orcl AS SYSDBA> 
+```sql
+select apex_web_service.make_rest_request('https://www.google.com','GET') as "Secure Google"
+  from dual;
+  ```
+  ```text
+Error starting at line : 1 in command –
+select apex_web_service.make_rest_request('https://www.google.com','GET') as "Secure Google" from dual
+Error report –
+ORA-29273: HTTP request failed
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES", line 681
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES_INVOKER", line 1004
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES_INVOKER", line 650
+ORA-29024: Certificate validation failure 
+ORA-06512: at "SYS.UTL_HTTP", line 380
+ORA-06512: at "SYS.UTL_HTTP", line 1148
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES_INVOKER", line 598
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES_INVOKER", line 816
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES_INVOKER", line 1332
+ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES", line 641
+ORA-06512: at "APEX_240200.WWV_FLOW_WEBSERVICES_API", line 661
+ORA-06512: at line 1
+```
+### Slide 116 - No title
+
 "My developers & application also need to reach TLS protected URLs from our 19c (or earlier?) database"
 
-Slide 57 - You need a TLS wallet! (unless you are on 23ai!)
+### Slide 117 - You need a TLS wallet!
 TLS wallet? Don’t you mean SSL wallet?
 
-Slide 58 - You need a TLS wallet! (unless you are on 23ai!)
-TLS wallet? Don’t you mean SSL wallet?
-                 =
-Car? Don’t you mean horseless carriage?
+### Slide 118 - You need a TLS wallet!
+TLS wallet? Don’t you mean SSL wallet?  
+                 =  
+Car? Don’t you mean horseless carriage?  
 We’ve been using TLS since the late 1990s.
 
-Slide 59 - What is a TLS wallet?
-A TLS wallet lives in a directory and contains an ewallet.p12 file and optionally, a cwallet.sso file.
-ewallet.p12 file contains trusted certificates *
-cwallet.sso file contains an encrypted password that allows you and the database to read the ewallet.p12 file. *
+### Slide 119 - What is a TLS wallet?
+A TLS wallet lives in a directory and contains an ewallet.p12 file and optionally, a cwallet.sso file.  
+ewallet.p12 file contains trusted certificates *  
+cwallet.sso file contains an encrypted password that allows you and the database to read the ewallet.p12 file. *  
 
-* With other types of wallets, these files can hold different things. Don’t mix your wallets together!
+\* With other types of wallets, these files can hold different things. Don’t mix your wallets together!
 
-Slide 60 - Aside: Other types of wallets you say?
-xdb_wallet
-Automatically created by Oracle for each database that you create. Used by XML DB listener (that we don’t really use anymore).
-seps_wallet
-Secure Enterprise Password Store used to allow bequeath connections (no password needed) to Oracle database users other than SYS.
-tde_wallet (or, if you set the wallet_root database parameter, Oracle will name this wallet "tde“)
-Used to store Transparent Data Encryption keys
-tls_wallet
-Used to allow access to web services/URLs protected by TLS before Oracle 23ai. No longer needed for 23ai+ databases.
+### Slide 120 - Aside: Other types of wallets you say?
+- xdb_wallet  
+    Automatically created by Oracle for each database that you create. Used by XML DB listener (that we don’t really use anymore).
+- seps_wallet  
+    Secure Enterprise Password Store used to allow bequeath connections (no password needed) to Oracle database users other than SYS.
+- tde_wallet (or, if you set the wallet_root database parameter, Oracle will name this wallet "tde")  
+    Used to store Transparent Data Encryption keys
+- tls_wallet
+    Used to allow access to web services/URLs protected by TLS before Oracle 23ai. No longer needed for 23ai+ databases.
 
-I use the above as the actual names for my wallets.                          Again: Don’t mix your wallets together!
+I use the above as the actual names for my wallets.  
+Again: Don’t mix your wallets together!
 
-Slide 61 - Create a TLS wallet (not needed on 23ai or higher!)
-[oracle@databaseserver DB:orclcon ~]
-locate /xdb_wallet/  <--Find a good location for the wallet. How about next to the delivered xdb_wallet?
-/u01/app/oracle/admin/orclcon/xdb_wallet/cwallet.sso
-/u01/app/oracle/admin/orclcon/xdb_wallet/ewallet.p12
-[oracle@databaseserver DB:orclcon ~]
-mkdir /u01/app/oracle/admin/orclcon/tls_wallet
-[oracle@databaseserver DB:orclcon ~]
+### Slide 121 - Create a TLS wallet (not needed on 23ai or higher!)
+[oracle@databaseserver DB:my19con ~]
+```bash
+locate /xdb_wallet/
+```
+<--Find a good location for the wallet. How about next to the delivered xdb_wallet?
+
+/u01/app/oracle/admin/my19con/xdb_wallet/cwallet.sso  
+/u01/app/oracle/admin/my19con/xdb_wallet/ewallet.p12  
+[oracle@databaseserver DB:my19con ~]
+```bash
+mkdir /u01/app/oracle/admin/my19con/tls_wallet
+```
+[oracle@databaseserver DB:my19con ~]
+```bash
 cd !$
-cd /u01/app/oracle/admin/orclcon/tls_wallet
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+```
+cd /u01/app/oracle/admin/my19con/tls_wallet
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
+```bash
 orapki wallet create -wallet . -auto_login
-Oracle PKI Tool Release 19.0.0.0.0 – Production
-Enter password:  <- Enter Wallet Password
-Enter password again: <- Confirm Wallet Password
-Operation is successfully completed.
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+```
+Oracle PKI Tool Release 19.0.0.0.0 – Production  
+Enter password:  <- Enter Wallet Password  
+Enter password again: <- Confirm Wallet Password  
+Operation is successfully completed.  
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
+```bash
 ls
+```
 cwallet.sso  ewallet.p12
 
-Slide 62 - Configure APEX tls wallet location (not needed on 23ai+!)
+### Slide 122 - Configure APEX tls wallet location
 SYS@orcl AS SYSDBA>
-exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/orclcon/tls_wallet');
+```sql
+exec apex_instance_admin.set_parameter('WALLET_PATH','file:/u01/app/oracle/admin/my19con/tls_wallet');
+```
 PL/SQL procedure successfully completed.
 
-SYS@orcl AS SYSDBA> commit; <-- The above doesn’t seem to commit, so just go ahead and commit.
+SYS@orcl AS SYSDBA>
+```sql
+commit;
+```
+<-- The above doesn’t seem to commit, so just go ahead and commit.  
 Commit complete.
 
 Or you can use the APEX Admin UI, but we have yet to set that up.
 
-Slide 63 - Get a root certificate to add to the wallet
-Slide 64 - Get a root certificate to add to the wallet
-Slide 65 - Get a root certificate to add to the wallet
-Slide 66 - Get a root certificate to add to the wallet
-Slide 67 - Get a root certificate to add to the wallet
-Slide 68 - Get a root certificate to add to the wallet
+### Slide 123 - Get a root certificate to add to the wallet
+### Slide 124 - Get a root certificate to add to the wallet
+### Slide 125 - Get a root certificate to add to the wallet
+### Slide 126 - Get a root certificate to add to the wallet
+### Slide 127 - Get a root certificate to add to the wallet
+### Slide 128 - Get a root certificate to add to the wallet
+```text
 -----BEGIN CERTIFICATE-----
 MIIFVzCCAz+gAwIBAgINAgPlk28xsBNJiGuiFzANBgkqhkiG9w0BAQwFADBHMQsw
 CQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2VzIExMQzEU
@@ -1620,35 +1734,46 @@ Z6tGn6D/Qqc6f1zLXbBwHSs09dR2CQzreExZBfMzQsNhFRAbd03OIozUhfJFfbdT
 2tIMPNuzjsmhDYAPexZ3FL//2wmUspO8IFgV6dtxQ/PeEMMA3KgqlbbC1j+Qa3bb
 bP6MvPJwNQzcmRk13NfIRmPVNnGuV/u3gm3c
 -----END CERTIFICATE-----
+```
 
-Slide 69 - Add a root certificate to the TLS wallet (not needed on 23ai+!)
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+### Slide 129 - Add a root certificate to the TLS wallet
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
+```bash
 vim GTSRootR1.crt
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+```
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
+```bash
 orapki wallet add -wallet . –trusted_cert –cert GTSRootR1.crt
-Oracle PKI Tool Release 19.0.0.0.0 – Production
-Cannot modify auto-login (sso) wallet
-Enter wallet password: <- Enter wallet password
-Operation is successfully completed.
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+```
+Oracle PKI Tool Release 19.0.0.0.0 – Production  
+Cannot modify auto-login (sso) wallet  
+Enter wallet password: <- Enter wallet password  
+Operation is successfully completed.  
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
+```bash
 orapki wallet display -wallet .
-Requested Certificates:
-User Certificates:
-Trusted Certificates:
-Subject:        CN=GTS Root R1,O=Google Trust Services LLC,C=US
+```
+
+Requested Certificates:  
+User Certificates:  
+Trusted Certificates:  
+Subject:        CN=GTS Root R1,O=Google Trust Services LLC,C=US  
+
 Password to put cert into the wallet, no password to read the wallet.
 
-Slide 70 - https requests now work in 19c too! (23ai “just workS”)
+### Slide 130 - https requests now work in 19c too!
 SYS@orcl AS SYSDBA> 
+```sql
 select apex_web_service.make_rest_request('https://www.google.com','GET') as "Secure Google"                       
   from dual;
-                                                                     Secure Google
-___________________________________________________________________________________
-<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en"
+``` 
+| Secure Google |
+|---------------|
+| `<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en">` |
 
 Note: When testing, it's always better to go ahead and get a new database session after the wallet location is set.
 
-Special 2025 Update!
+Special Update!
 While currently undocumented (Connor logged a doc bug that has been accepted) you can,
 with 19.18+ make 19c work just like 23ai by running the below for pure http calls.
 Interestingly the APEX admin API doesn't allow you to set this value (you get an error that the format needs to start with file:), but the APEX UI does work.
@@ -1657,46 +1782,57 @@ exec utl_http.set_wallet('system:');
 
 SR 3-42740668211 : BUG: apex_instance_admin.set_parameter doesn't allow "system:" as a wallet path in Oracle 19.18+
 
-Slide 71 - Add a self signed cert to the TLS wallet
-19c or earlier
-[oracle@databaseserver DB:orclcon /u01/app/oracle/admin/orclcon/tls_wallet]
+### Slide 131 - Add a self signed cert to the TLS wallet
+19.17 or earlier
+[oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
+```bash
 orapki wallet add -wallet . –trusted_cert –cert self_signed_cert.crt 
-Oracle PKI Tool Release 19.0.0.0.0 – Production
-Cannot modify auto-login (sso) wallet
-Enter wallet password: <-- Enter wallet password
-Operation is successfully completed.
+```
+Oracle PKI Tool Release 19.0.0.0.0 – Production  
+Cannot modify auto-login (sso) wallet  
+Enter wallet password: <-- Enter wallet password  
+Operation is successfully completed.  
 
-23ai or later
+19.18+ 
 [root@databaseserver ~ ]
+```bash
 cp self_signed_cert.crt /etc/pki/ca-trust/source/anchors/
+```
 [root@databaseserver ~ ]
+```bash
 update-ca-trust
+```
 
-Slide 131 - AGENDA
-We have covered three main topics:
+### Slide 132 - AGENDA
+We have covered three main topics:  
 There are also three bonus topics that we won’t have time to cover but are included as references for you:
-00 The Pre-APEX Database
-01 Install APEX Component (REQUIRED)
-02 Reach Out Of The Database (Optional)
-03 Enable Access Into The Database (Optional)
-04 Bonus 1: Create APEX Resource Plan (Optional)
-05 Bonus 2: Create A systemd Service (Optional)
+
+00 The Pre-APEX Database  
+01 Install APEX Component (REQUIRED)  
+02 Reach Out Of The Database (Optional)  
+03 Enable Access Into The Database (Optional)  
+04 Bonus 1: Create APEX Resource Plan (Optional)  
+05 Bonus 2: Create A systemd Service (Optional)  
 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)
 
-Slide 132 - hidden - Solution #4
+### Slide 133 - Solution #4 - hidden
 
-Slide 133 - Bonus 1: Create APEX Resource Plan (Optional)
+### Slide 134 - Bonus 1: Create APEX Resource Plan (Optional)
 
-Slide 134 - Pluggable default resource plan during the day
+## Slide 135 - Pluggable default resource plan during the day
 SYS@orcl AS SYSDBA> 
+```sql
 show parameter resource_manager_plan
-NAME                                 TYPE        VALUE
------------------------------------- ----------- -------------------------
-resource_manager_plan                string
+```
+| NAME                  | TYPE   | VALUE |
+|-----------------------|--------|-------|
+| resource_manager_plan | string |       |
 
-Slide 135 - Pluggable default plan during nights & weekends
-SYS@orcl AS SYSDBA> 
+### Slide 136 - Pluggable default plan during nights & weekends
+SYS@orcl AS SYSDBA>
+```sql 
 show parameter resource_manager_plan
+```
 NAME                                 TYPE        VALUE
 ------------------------------------ ----------- ------------------------------------------
 resource_manager_plan                string      SCHEDULER[0x4F87]:DEFAULT_MAINTENANCE_PLAN
@@ -1861,7 +1997,7 @@ root     2263625 2263594 27 19:36 pts/3    00:00:17 java -Doracle.dbtools.cmdlin
 [root@applicationserver ~]
 kill 2263625
 [1]+  Exit 143  nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> 
-                /var/log/ords/25.3/ords-serve.log 2>&1
+                /var/log/ords/26.1/ords-serve.log 2>&1
 
 
 Slide 149 - Create ORDS service
@@ -1913,7 +2049,7 @@ systemctl status ords
 
 Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: db.connectionType=basic
 Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.class.version=64.0
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log=/var/log/ords/25.3
+Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log=/var/log/ords/26.1
 Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: 2025-05-29T00:00:09.324Z INFO
 Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Mapped local pools from /etc/ords/latest/databases:
 Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]:   /app/                               => default
@@ -1936,7 +2072,7 @@ Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: sun.io.unicode.encod
 Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: jdbc.InitialLimit=21
 Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: db.connectionType=basic
 Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.class.version=64.0
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log=/var/log/ords/25.3
+Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log=/var/log/ords/26.1
 Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: 2025-05-29T00:00:09.324Z INFO
 Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Mapped local pools from /etc/ords/latest/databases:
 Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]:   /app/                               => default                       
@@ -2044,13 +2180,13 @@ firewall-cmd --runtime-to-permanent
 success
 
 Slide 162 - Update the port that ORDS uses
-[root@applicationserver /opt/ords/25.3/bin]
-./ords --config /etc/ords/25.3 config set standalone.https.port 8080
+[root@applicationserver /opt/ords/26.1/bin]
+./ords --config /etc/ords/orcl/26.1 config set standalone.https.port 8080
 
 ORDS: Release 25.3 Production on Wed Oct 15 21:49:17 2025
 Copyright (c) 2010, 2025, Oracle.
 Configuration:
-  /etc/ords/25.3
+  /etc/ords/orcl/26.1
 The global setting named: standalone.https.port was set to: 8080
 
 Slide 163 - Secure the ords account & restart ords
