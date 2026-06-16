@@ -1605,7 +1605,7 @@ The global setting named: standalone.doc.root was set to: /var/www/html
 Today  
 [root@applicationserver /opt/ords]
 ```bash
-ln -s 25.3 latest
+ln -s 26.1 latest
 ```
 [root@applicationserver /opt/ords]
 ```bash
@@ -1613,7 +1613,7 @@ cd /etc/ords/orcl
 ```
 [root@applicationserver /etc/ords/orcl]
 ```bash
-ln -s 25.3 latest
+ln -s 26.1 latest
 ```
 The Future  
 [root@applicationserver /opt/ords]
@@ -1622,7 +1622,7 @@ unlink latest
 ```
 [root@applicationserver /opt/ords]
 ```bash 
-ln -s 26.1 latest
+ln -s 26.2 latest
 ```
 [root@applicationserver /opt/ords]
 ```bash
@@ -1634,7 +1634,7 @@ unlink latest
 ```
 [root@applicationserver /etc/ords]
 ```bash
-ln -s 26.1 latest
+ln -s 26.2 latest
 ```
 <a id="slide-95"></a>
 ### Slide 95 - Restart and monitor ORDS
@@ -1651,8 +1651,8 @@ tail -f /var/log/ords/orcl/26.1/ords-serve.log
 ```text
 Mapped local pools from /etc/ords/orcl/latest/databases:
   /app/                               => default                        => VALID
-2025-10-15T17:08:43.508Z INFO        Oracle REST Data Services initialized
-Oracle REST Data Services version : 25.3.0.r1001652
+2026-06-15T17:08:43.508Z INFO        Oracle REST Data Services initialized
+Oracle REST Data Services version : 26.1.2.r1001652
 Oracle REST Data Services server info: jetty/12.0.13
 ```
 <a id="slide-96"></a>
@@ -2385,7 +2385,7 @@ Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:0
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Mapped local pools from /etc/ords/orcl/latest/databases:
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]:   /app/                               => default
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:00:09.486Z INFO  Oracle REST Data Services
-Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services version : 25.3.0.r1001652
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services version : 26.1.2.r1001652
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit
 ```
@@ -2411,7 +2411,7 @@ Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:0
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Mapped local pools from /etc/ords/orcl/latest/databases:
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]:   /app/                               => default                       
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:00:09.486Z INFO        Oracle REST Data Services initiali
-Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services version : 25.3.0.r1001652
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services version : 26.1.2.r1001652
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM
 ```
@@ -2560,7 +2560,7 @@ success
 ```
 ```text
 ORDS: Release 26.1 Production on Sat Jun 13 13:35:07 2026
-Copyright (c) 2010, 2025, Oracle.
+Copyright (c) 2010, 2026, Oracle.
 Configuration:
   /etc/ords/orcl/26.1
 The global setting named: standalone.https.port was set to: 8080
