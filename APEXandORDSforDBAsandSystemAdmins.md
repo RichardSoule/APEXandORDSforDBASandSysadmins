@@ -29,41 +29,217 @@ If you have any feedback, please reach out: richard.soule@talan.com.
 
 This content was updated in June 2026 for the Kscope26 in Aurora Colorado.
 
+[Skip the table of contents and go to the first slide](#slide-01)
+
 # Table of Contents
 
-TODO: Have AI replace this with a table of contents that points at each slide.
+- **Opening Slides**
+  - [Slide 01 - ODTUG Kscope26 Opening Slide](#slide-01)
+  - [Slide 02 - APEX & ORDS for DBAs and Sysadmins - 2026](#slide-02)
+- **[Slide 03 - The Joke - hidden](#slide-03)**
+  - [Slide 04 - The Joke - It's Easy](#slide-04)
+  - [Slide 05 - The Joke - 1,2,3](#slide-05)
+  - [Slide 06 - The Joke - Thanks](#slide-06)
+- **[Slide 07 - Intro  - hidden](#slide-07)**
+  - [Slide 08 - The most important slide](#slide-08)
+- **[Slide 09 - The Problem - hidden](#slide-09)**
+  - [Slide 10 - There are so many things to think about...](#slide-10)
+- **[Slide 11 - Agenda - hidden](#slide-11)**
+  - [Slide 12 - Agenda](#slide-12)
+- **[Slide 13 - hidden - Before we start](#slide-13)**
+  - [Slide 14 - 00 The Pre-APEX Database](#slide-14)
+  - [Slide 15 - What schemas do you have before APEX is installed?](#slide-15)
+  - [Slide 16 - What components do you have before APEX is installed?](#slide-16)
+  - [Slide 17 - How many public synonyms before APEX is installed?](#slide-17)
+  - [Slide 18 - Tablespaces before APEX is installed](#slide-18)
+- **[Slide 19 - Solution #1 Install APEX - hidden](#slide-19)**
+  - [Slide 20 - 01 Install APEX Components (REQUIRED)](#slide-20)
+  - [Slide 21 - Bare minimum DBA action: Install APEX Component](#slide-21)
+  - [Slide 22 - Root container or pluggable install?](#slide-22)
+  - [Slide 23 - Root container or pluggable install?](#slide-23)
+  - [Slide 24 - Download APEX](#slide-24)
+  - [Slide 25 - Get APEX Download URL](#slide-25)
+  - [Slide 26 - Download and extract APEX](#slide-26)
+  - [Slide 27 - Install APEX component in a pluggable database](#slide-27)
+  - [Slide 28 - Install APEX component in a pluggable database](#slide-28)
+  - [Slide 29 - A note about tablespaces](#slide-29)
+  - [Slide 30 - What schemas do you have before APEX is installed?](#slide-30)
+  - [Slide 31 - What schemas do you have after APEX is installed?](#slide-31)
+  - [Slide 32 -  What components do you have before APEX is installed?](#slide-32)
+  - [Slide 33 - What components do you have after APEX is installed?](#slide-33)
+  - [Slide 34 - How many public synonyms before APEX is installed?](#slide-34)
+  - [Slide 35 - How many public synonyms after APEX is installed?](#slide-35)
+  - [Slide 36 - Tablespaces before APEX is installed](#slide-36)
+  - [Slide 37 - Tablespaces after APEX is installed](#slide-37)
+  - [Slide 38 - What does the database now tell us about APEX?](#slide-38)
+  - [Slide 39 - Get the latest APEX patch](#slide-39)
+  - [Slide 40 - Get the latest APEX patch](#slide-40)
+  - [Slide 41 - Get the latest APEX patch](#slide-41)
+  - [Slide 42 - Get the latest APEX patch](#slide-42)
+  - [Slide 43 - Download and extract APEX patch](#slide-43)
+  - [Slide 44 - Install latest APEX patch in the database](#slide-44)
+  - [Slide 45 - What does the database now tell us about APEX?](#slide-45)
+  - [Slide 46 - Did security change?](#slide-46)
+  - [Slide 47 - What did you just deliver to your database developers?](#slide-47)
+  - [Slide 48 - 01 Install APEX Component (REQUIRED)](#slide-48)
+- **[Slide 49 - Solution #2 - hidden](#slide-49)**
+  - [Slide 50 - 02 Reach Out Of The Database (Optional)](#slide-50)
+  - [Slide 51 - Security is about to change!](#slide-51)
+  - [Slide 52 - Those extra value packages don’t work… yet](#slide-52)
+  - [Slide 53 - The easy button](#slide-53)
+  - [Slide 54 - Those extra value packages now work](#slide-54)
+  - [Slide 55 - Add a self signed cert to the OS certificate store](#slide-55)
+  - [Slide 56 - Let’s revisit the easy button from earlier…](#slide-56)
+  - [Slide 57 - I’d like to manage this with greater granularity](#slide-57)
+  - [Slide 58 - 02 Reach Out Of The Database (Optional)](#slide-58)
+- **[Slide 59 - Solution #3 - hidden](#slide-59)**
+  - [Slide 60 - 03 Enable Access Into The Database (Optional)](#slide-60)
+  - [Slide 61 - Oracle REST Data Services (ORDS)](#slide-61)
+  - [Slide 62 - Oracle REST Data Services (ORDS)](#slide-62)
+  - [Slide 63 - Where should ords be deployed?](#slide-63)
+  - [Slide 64 - User access ports: 443 or 80 or 1024 or higher?](#slide-64)
+  - [Slide 65 - Security is about to change even more!](#slide-65)
+  - [Slide 66 - Creating new account with password?](#slide-66)
+  - [Slide 67 - Doc Bugs Abound!](#slide-67)
+  - [Slide 68 - Download ORDS](#slide-68)
+  - [Slide 69 - Download ORDS source](#slide-69)
+  - [Slide 70 - Create ORDS directories](#slide-70)
+  - [Slide 71 - Choose an option for APEX static images](#slide-71)
+  - [Slide 72 - Option 1: Use Oracle's content delivery (preferred)](#slide-72)
+  - [Slide 73 - Option 2: Manually maintain apex images](#slide-73)
+  - [Slide 74 - Create ORDS runtime](#slide-74)
+  - [Slide 75 - ORDS runtime details](#slide-75)
+  - [Slide 76 - Create ORDS Instance](#slide-76)
+  - [Slide 77 - Create ORDS Instance (continued)](#slide-77)
+  - [Slide 78 - Create ORDS Instance (continued)](#slide-78)
+  - [Slide 79 - ORDS is now running](#slide-79)
+  - [Slide 80 - What happened in our configuration directory](#slide-80)
+  - [Slide 81 - What is in pool.xml?](#slide-81)
+  - [Slide 82 - What is in settings.xml?](#slide-82)
+  - [Slide 83 - ORDS works!](#slide-83)
+  - [Slide 84 - Create an APEX admin user and password](#slide-84)
+  - [Slide 85 - Login to APEX](#slide-85)
+  - [Slide 86 - Success!](#slide-86)
+  - [Slide 87 - Service URLs](#slide-87)
+  - [Slide 88 - Cool/Good URLs](#slide-88)
+  - [Slide 89 - Default service URLs are bad according to Sir Tim](#slide-89)
+  - [Slide 90 - Let’s fix those URLs…](#slide-90)
+  - [Slide 91 - …and other things with poor defaults](#slide-91)
+  - [Slide 92 - Stop ORDS Instance](#slide-92)
+  - [Slide 93 - Configure ords settings](#slide-93)
+  - [Slide 94 - Configure ords directories to be more maintainable](#slide-94)
+  - [Slide 95 - Restart and monitor ORDS](#slide-95)
+  - [Slide 96 - It works!](#slide-96)
+  - [Slide 97 - What schemas changes after APEX & ORDS are installed?](#slide-97)
+  - [Slide 98 - What components do you have after APEX & ORDS are installed?](#slide-98)
+  - [Slide 99 - How many public synonyms after APEX & ORDS are installed?](#slide-99)
+  - [Slide 100 - Tablespaces after APEX & ORDS are installed](#slide-100)
+  - [Slide 101 - 03 Enable Access Into The Database (Optional)](#slide-101)
+  - [Slide 102 - SQL Developer Web](#slide-102)
+  - [Slide 103 - First REST enable schemas](#slide-103)
+  - [Slide 104 - What does the database tell us about rest schemas?](#slide-104)
+  - [Slide 105 - Logging in...](#slide-105)
+  - [Slide 106 - Sweet stuff!](#slide-106)
+  - [Slide 107 - Sweet stuff!](#slide-107)
+  - [Slide 108 - Sweet stuff!](#slide-108)
+  - [Slide 109 - AGENDA](#slide-109)
+- **[Slide 110 - Conclusion - hidden](#slide-110)**
+  - [Slide 111 - In Conclusion:](#slide-111)
+  - [Slide 112 - The most important slide](#slide-112)
+  - [Slide 113 - Thanks](#slide-113)
+  - [Slide 115 - 19.17 or earlier databases need a TLS Wallet for HTTPS](#slide-115)
+  - [Slide 116 - No title](#slide-116)
+  - [Slide 117 - You need a TLS wallet!](#slide-117)
+  - [Slide 118 - You need a TLS wallet!](#slide-118)
+  - [Slide 119 - What is a TLS wallet?](#slide-119)
+  - [Slide 120 - Aside: Other types of wallets you say?](#slide-120)
+  - [Slide 121 - Create a TLS wallet (not needed on 23ai or higher!)](#slide-121)
+  - [Slide 122 - Configure APEX tls wallet location](#slide-122)
+  - [Slide 123 - Get a root certificate to add to the wallet](#slide-123)
+  - [Slide 124 - Get a root certificate to add to the wallet](#slide-124)
+  - [Slide 125 - Get a root certificate to add to the wallet](#slide-125)
+  - [Slide 126 - Get a root certificate to add to the wallet](#slide-126)
+  - [Slide 127 - Get a root certificate to add to the wallet](#slide-127)
+  - [Slide 128 - Get a root certificate to add to the wallet](#slide-128)
+  - [Slide 129 - Add a root certificate to the TLS wallet](#slide-129)
+  - [Slide 130 - https requests now work in 19c too!](#slide-130)
+  - [Slide 131 - Add a self signed cert to the TLS wallet](#slide-131)
+  - [Slide 132 - AGENDA](#slide-132)
+- **[Slide 133 - Solution #4 - hidden](#slide-133)**
+  - [Slide 134 - Bonus 1: Create APEX Resource Plan (Optional)](#slide-134)
+  - [Slide 135 - Pluggable default resource plan during the day](#slide-135)
+  - [Slide 136 - Pluggable default plan during nights & weekends](#slide-136)
+  - [Slide 137 - Default Resource Manager Plans](#slide-137)
+  - [Slide 138 - Let’s make a new plan!](#slide-138)
+  - [Slide 139 - Let’s make a new plan!](#slide-139)
+  - [Slide 140 - Let’s make a new plan!](#slide-140)
+  - [Slide 141 - Let’s make a new plan!](#slide-141)
+  - [Slide 146 - What happened to our APEX & ORDS schemas?](#slide-146)
+- **[Slide 147 - Solution #5 - hidden](#slide-147)**
+  - [Slide 148 - 05 Bonus 2: Create A systemd Service (Optional)](#slide-148)
+  - [Slide 149 - Stop ORDS we ran with nohup](#slide-149)
+  - [Slide 150 - Create ORDS service](#slide-150)
+  - [Slide 151 - Enable & start ORDS service](#slide-151)
+  - [Slide 152 - Manage ORDS service - Status](#slide-152)
+  - [Slide 153 - Manage ORDS service – Read logs & stop](#slide-153)
+- **[Slide 154 - Solution #6 - hidden](#slide-154)**
+  - [Slide 155 - 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)](#slide-155)
+  - [Slide 156 - Where should ords be deployed?](#slide-156)
+  - [Slide 157 - 
+“I don’t want to run](#slide-157)
+  - [Slide 158 - ORDS deployment: Who?](#slide-158)
+  - [Slide 159 - Create ords os user & change file ownership](#slide-159)
+  - [Slide 160 - Modify ords systemd service to use ords os user](#slide-160)
+  - [Slide 161 - Create firewalld ORDS service](#slide-161)
+  - [Slide 162 - Create firewalld forward from 443 to 8080](#slide-162)
+  - [Slide 163 - Update the port that ORDS uses](#slide-163)
+  - [Slide 164 - Secure the ords account & restart ords](#slide-164)
+  - [Slide 165 - ORDS works!](#slide-165)
+  - [Slide 166 - AGENDA](#slide-166)
+  - [Slide 167 - The most important slide](#slide-167)
+  - [Slide 168 - Thanks](#slide-168)
 
 # The Slides
 
+<a id="slide-01"></a>
 ## Slide 01 - ODTUG Kscope26 Opening Slide
 
+<a id="slide-02"></a>
 ## Slide 02 - APEX & ORDS for DBAs and Sysadmins - 2026
 Rich Soule (richard.soule@talan.com)  
 Director of Consulting Services  
 Oracle Technologies group at Talan  
 Oracle ACE as of 2026!
 
+<a id="slide-03"></a>
 ## Slide 03 - The Joke - hidden
 
+<a id="slide-04"></a>
 ### Slide 04 - The Joke - It's Easy
 It’s as easy as 1, 2, 3
 
+<a id="slide-05"></a>
 ### Slide 05 - The Joke - 1,2,3
 1. Install APEX
 2. Install ORDS
 3. Take a break, you're done!
 
+<a id="slide-06"></a>
 ### Slide 06 - The Joke - Thanks
 Rich Soule  
 richard.soule@talan.com
 
+<a id="slide-07"></a>
 ## Slide 07 - Intro  - hidden
 
+<a id="slide-08"></a>
 ### Slide 08 - The most important slide
 https://github.com/RichardSoule/APEXandORDSforDBASandSysadmins
 
+<a id="slide-09"></a>
 ## Slide 09 - The Problem - hidden
 
+<a id="slide-10"></a>
 ### Slide 10 - There are so many things to think about...
 Where is APEX going to be installed? Root container (nope) or Pluggable install (yes!)  
 What is going to happen to the database? How many new accounts? Which are locked vs. unlocked?  
@@ -78,8 +254,10 @@ What should the context path be for ORDS? (Not /ords! How about /app instead?)
 Should you enable all ORDS features or just some ORDS features? (All is better)  
 Etc…
 
+<a id="slide-11"></a>
 ## Slide 11 - Agenda - hidden
 
+<a id="slide-12"></a>
 ### Slide 12 - Agenda
 We are going to cover three main topics:  
 00 The Pre-APEX Database  
@@ -87,10 +265,13 @@ We are going to cover three main topics:
 02 Reach Out Of The Database (Optional)  
 03 Enable Access Into The Database (Optional)  
 
+<a id="slide-13"></a>
 ## Slide 13 - hidden - Before we start
 
+<a id="slide-14"></a>
 ### Slide 14 - 00 The Pre-APEX Database
 
+<a id="slide-15"></a>
 ### Slide 15 - What schemas do you have before APEX is installed?
 SYS@orcl AS SYSDBA >  
 ```sql
@@ -140,6 +321,7 @@ SYS@orcl AS SYSDBA >
 | XS$NULL | LOCKED | | SYSTEM | DEFAULT | DEFAULT_CONSUMER_GROUP | NONE | Y |
 31 rows selected.
 
+<a id="slide-16"></a>
 ### Slide 16 - What components do you have before APEX is installed?
 SYS@orcl AS SYSDBA >
 ```sql 
@@ -166,6 +348,7 @@ SYS@orcl AS SYSDBA >
 | Spatial | 23.26.2.0.0 | VALID | MDSYS |
 12 rows selected. 
 
+<a id="slide-17"></a>
 ### Slide 17 - How many public synonyms before APEX is installed?
 SYS@orcl AS SYSDBA> 
 ```
@@ -176,6 +359,7 @@ select to_char(count(*),'99,999') as "Total Public Synonyms"
 |--------------------:|
 | 13,386              |
 
+<a id="slide-18"></a>
 ### Slide 18 - Tablespaces before APEX is installed
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -207,11 +391,14 @@ SYS@orcl AS SYSDBA >
 | UNDOTBS1 | 430 | 407 | 23 | 95 | 5 | 32,768 |
 
 
+<a id="slide-19"></a>
 ## Slide 19 - Solution #1 Install APEX - hidden
 
+<a id="slide-20"></a>
 ### Slide 20 - 01 Install APEX Components (REQUIRED)
 Enable developers to leverage the APEX component APIs within the database
 
+<a id="slide-21"></a>
 ### Slide 21 - Bare minimum DBA action: Install APEX Component
 But: “Security”  
          It’s just a database component  
@@ -222,19 +409,24 @@ But: “It’s too complicated”
 But: “This other thing”  
          Please just continue through this presentation  
 
+<a id="slide-22"></a>
 ### Slide 22 - Root container or pluggable install?
 Pluggable is almost always the right answer.  
 Root container install might be useful if you are hosting hundreds or thousands of APEX installs, each in their own pluggable database… but you probably aren’t.
 
+<a id="slide-23"></a>
 ### Slide 23 - Root container or pluggable install?
 Pluggable is always the right answer. (Suggestion from Kris Rice)  
 Root container install might be useful if you are hosting hundreds or thousands of APEX installs, each in their own pluggable database… but you probably aren’t.
 
+<a id="slide-24"></a>
 ### Slide 24 - Download APEX
 Or just go to https://apex.oracle.com/download
 
+<a id="slide-25"></a>
 ### Slide 25 - Get APEX Download URL
 
+<a id="slide-26"></a>
 ### Slide 26 - Download and extract APEX
 [oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
 ```bash
@@ -257,6 +449,7 @@ apex_26.1.zip           100%[================>] 310.89M  54.3MB/s    in 6.8s
 unzip -q apex_26.1.zip
 ```
 
+<a id="slide-27"></a>
 ### Slide 27 - Install APEX component in a pluggable database
 [oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1] 
 ```bash
@@ -270,6 +463,7 @@ SYS@orcl AS SYSDBA>
 ```sql
 @apexins sysaux sysaux temp /i/
 ```
+<a id="slide-28"></a>
 ### Slide 28 - Install APEX component in a pluggable database
 [SNIP]  
 Thank you for installing Oracle APEX 26.1.0  
@@ -286,6 +480,7 @@ SYS> exit
 Disconnected from Oracle AI Database 26ai Enterprise Edition Release 23.26.2.0.0 - Production
 Version 23.26.2.0.0
 
+<a id="slide-29"></a>
 ### Slide 29 - A note about tablespaces
 SYS@orcl AS SYSDBA> @apexins **sysaux** sysaux temp /i/  
 SYSAUX is totally fine, but feel free to create your own tablespace if you want.  
@@ -296,6 +491,7 @@ SYS@orcl AS SYSDBA> @apexins sysaux **sysaux** temp /i/
 SYSAUX is fine if you are not doing a lot of document uploads, but if you are building something like a content management application with APEX document upload capability, consider creating a tablespace to hold the documents. Maybe named APEX_DOCUMENT_UPLOADS.   Files uploaded to APEX are stored here.  
 This becomes the default tablespace for the FLOWS_FILES database schema.
 
+<a id="slide-30"></a>
 ### Slide 30 - What schemas do you have before APEX is installed?
 SYS@orcl AS SYSDBA >  
 ```sql
@@ -346,6 +542,7 @@ SYS@orcl AS SYSDBA >
 31 rows selected.
 
 
+<a id="slide-31"></a>
 ### Slide 31 - What schemas do you have after APEX is installed?
 SYS@orcl AS SYSDBA >  
 ```sql
@@ -405,6 +602,7 @@ APEX_PUBLIC_ROUTER
 APEX_PUBLIC_USER
 FLOWS_FILES
 
+<a id="slide-32"></a>
 ### Slide 32 -  What components do you have before APEX is installed?
 SYS@orcl AS SYSDBA >
 ```sql 
@@ -432,6 +630,7 @@ SYS@orcl AS SYSDBA >
 12 rows selected. 
 
 
+<a id="slide-33"></a>
 ### Slide 33 - What components do you have after APEX is installed?
 SYS@orcl AS SYSDBA> 
 SYS@orcl AS SYSDBA >
@@ -461,6 +660,7 @@ SYS@orcl AS SYSDBA >
 13 rows selected. 
 1 new component
 
+<a id="slide-34"></a>
 ### Slide 34 - How many public synonyms before APEX is installed?
 SYS@orcl AS SYSDBA> 
 ```
@@ -471,6 +671,7 @@ select to_char(count(*),'99,999') as "Total Public Synonyms"
 |--------------------:|
 | 13,386              |
 
+<a id="slide-35"></a>
 ### Slide 35 - How many public synonyms after APEX is installed?
 SYS@orcl AS SYSDBA> 
 ```
@@ -482,6 +683,7 @@ select to_char(count(*),'99,999') as "Total Public Synonyms"
 | 14,075              |
 689 new public synonyms
 
+<a id="slide-36"></a>
 ### Slide 36 - Tablespaces before APEX is installed
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -512,6 +714,7 @@ SYS@orcl AS SYSDBA >
 | SYSTEM | 390 | 4 | 386 | 1 | 99 | 33,554,432 |
 | UNDOTBS1 | 430 | 407 | 23 | 95 | 5 | 32,768 |
 
+<a id="slide-37"></a>
 ### Slide 37 - Tablespaces after APEX is installed
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -546,6 +749,7 @@ About 470 new Allocated MB
 and about 456 new Used MB  
 (excluding Undo)
 
+<a id="slide-38"></a>
 ### Slide 38 - What does the database now tell us about APEX?
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -580,12 +784,16 @@ SYS@orcl AS SYSDBA >
 ```
 no rows selected
 
+<a id="slide-39"></a>
 ### Slide 39 - Get the latest APEX patch 
 
+<a id="slide-40"></a>
 ### Slide 40 - Get the latest APEX patch 
 
+<a id="slide-41"></a>
 ### Slide 41 - Get the latest APEX patch  
 
+<a id="slide-42"></a>
 ### Slide 42 - Get the latest APEX patch  
 https://carsandcode.com/2026/06/09/generating-an-oracle-support-access-token-to-work-with-an-oracle-support-wget-sh-script/
 
@@ -593,6 +801,7 @@ The magic URL Oracle doesn't tell you about:
 https://updates.oracle.com/Orion/GenToken/get_token
 
 
+<a id="slide-43"></a>
 ### Slide 43 - Download and extract APEX patch 
 [oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
 ```bash
@@ -616,6 +825,7 @@ NOTE: The script may close your terminal window, so log back in and           ge
 ```bash
 unzip -q p39179920_261_Generic.zip
 ```
+<a id="slide-44"></a>
 ### Slide 44 - Install latest APEX patch in the database
 [oracle@databaseserver DB:my26con /usr/local/src/oracle/apex/26.1]
 ```bash
@@ -641,6 +851,7 @@ SYS@orcl AS SYSDBA>
 timing for: Complete Patch 39179920  
 Elapsed:    0.32 <-- Less than one minute
 
+<a id="slide-45"></a>
 ### Slide 45 - What does the database now tell us about APEX?
 SYS@orcl AS SYSDBA> 
 ```sql
@@ -671,28 +882,35 @@ select comp_name
 ______________ _______________
 Oracle APEX    26.1.1
 
+<a id="slide-46"></a>
 ### Slide 46 - Did security change?
 NO  
 No new schemas with logins.  
 New APIs, but nothing that 100 brilliant developers  
 couldn't have done with a few decades of development time.
 
+<a id="slide-47"></a>
 ### Slide 47 - What did you just deliver to your database developers?
 https://apex.oracle.com/api
 
+<a id="slide-48"></a>
 ### Slide 48 - 01 Install APEX Component (REQUIRED)
 You can stop here, and you have still delivered incredible value!  
 Enable database developers to leverage the APEX component APIs within the database
 
+<a id="slide-49"></a>
 ## Slide 49 - Solution #2 - hidden 
 
+<a id="slide-50"></a>
 ### Slide 50 - 02 Reach Out Of The Database (Optional)
 Enable database developers to leverage the APEX APIs to reach web services, email, etc.
 
+<a id="slide-51"></a>
 ### Slide 51 - Security is about to change!
 The database has provided UTL_HTTP packages for more than 25 years.  
 APEX can use those foundational packages to add extra value if you enable them.
 
+<a id="slide-52"></a>
 ### Slide 52 - Those extra value packages don’t work… yet
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -721,6 +939,7 @@ https://docs.oracle.com/error-help/db/ora-29273/
 https://docs.oracle.com/error-help/db/ora-06512/  
 https://docs.oracle.com/error-help/db/ora-24247/
 
+<a id="slide-53"></a>
 ### Slide 53 - The easy button
 SYS@orcl AS SYSDBA>
 ```sql
@@ -737,6 +956,7 @@ PL/SQL procedure successfully completed.
 
 Database users with the 5 facts (host, port, service name, username and password) can now reach any URL on any host & port combination
 
+<a id="slide-54"></a>
 ### Slide 54 - Those extra value packages now work
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -756,6 +976,7 @@ ________________________________________________________________________________
 
 19.17 or earlier you need a tls wallet for https connections. See appendix.
 
+<a id="slide-55"></a>
 ### Slide 55 - Add a self signed cert to the OS certificate store
 [root@databaseserver ~ ]
 ```bash
@@ -765,6 +986,7 @@ cp self_signed_cert.crt /etc/pki/ca-trust/source/anchors/
 ```bash
 update-ca-trust
 ```
+<a id="slide-56"></a>
 ## Slide 56 - Let’s revisit the easy button from earlier…
 ```sql
 begin
@@ -781,6 +1003,7 @@ PL/SQL procedure successfully completed.
 
 Database users with the 5 facts (host, port, service name, username and password) can now reach any URL on any host & port combination
 
+<a id="slide-57"></a>
 ### Slide 57 - I’d like to manage this with greater granularity
 ```sql
 begin
@@ -807,15 +1030,19 @@ end;
 - http_proxy  
     Used in conjunction with http to allow proxy connections  
 
+<a id="slide-58"></a>
 ### Slide 58 - 02 Reach Out Of The Database (Optional)
 You can stop here, and you have still delivered incredible value!
 Enable database developers to leverage the APEX APIs to reach web services, email, etc.
 
+<a id="slide-59"></a>
 ## Slide 59 - Solution #3 - hidden 
 
+<a id="slide-60"></a>
 ### Slide 60 - 03 Enable Access Into The Database (Optional)
 Let developers use APEX to build and deploy web applications, build REST services, and also enable SQL Developer Web
 
+<a id="slide-61"></a>
 ### Slide 61 - Oracle REST Data Services (ORDS)
 ORDS is a Java application that enables toolsets:
 - Oracle APEX  
@@ -829,9 +1056,11 @@ Also includes:
 - Mongo API for Oracle
 - mod_plsql ‘like’ functionality to assist with old mod_plsql migrations
 
+<a id="slide-62"></a>
 ### Slide 62 - Oracle REST Data Services (ORDS)
 ORDS also includes an embedded web server
 
+<a id="slide-63"></a>
 ### Slide 63 - Where should ords be deployed?
 It doesn’t really* matter. ORDS is quite small.
 - Many thousands of deployments directly on database servers as either the root user or the oracle user.
@@ -840,6 +1069,7 @@ It doesn’t really* matter. ORDS is quite small.
 
 \* If you are building Facebook, then it matters. But you are not building Facebook.
 
+<a id="slide-64"></a>
 ### Slide 64 - User access ports: 443 or 80 or 1024 or higher?
 * Port 443 (default https port)  
     This should **always** be the port that end users and developers use to get to your applications.  
@@ -856,11 +1086,13 @@ It doesn’t really* matter. ORDS is quite small.
    Doesn’t require a privileged OS account to run the service on port 1024 or higher.  
    If you don’t have a signed certificate, modern browsers will mark the site insecure.
  
+<a id="slide-65"></a>
 ### Slide 65 - Security is about to change even more!
 We are going to create a new connection pool schema in the database. ORDS will connect to the database using this account.
 
 This account is purely for ORDS, nobody needs to know the password.
 
+<a id="slide-66"></a>
 ### Slide 66 - Creating new account with password?
 Profiles Matter!
 SYS@orcl AS SYSDBA> 
@@ -885,8 +1117,10 @@ alter profile default limit password_life_time unlimited;
 Profile DEFAULT altered.  
 
 (Or create a new profile and assign it to the ORDS connection pool account, ORDS_PUBLIC_USER)
+<a id="slide-67"></a>
 ### Slide 67 - Doc Bugs Abound!
 
+<a id="slide-68"></a>
 ### Slide 68 - Download ORDS
 https://www.oracle.com/database/sqldeveloper/technologies/db-actions/download/
 or
@@ -894,6 +1128,7 @@ https://download.oracle.com/otn_software/java/ords/ords-latest.zip
 or
 Just google "download oracle ords"
 
+<a id="slide-69"></a>
 ### Slide 69 - Download ORDS source
 [root@applicationserver /usr/local/src/oracle/ords]
 ```bash
@@ -910,6 +1145,7 @@ ords-26.1.2.140.1916.zi 100%[============================>] 180.84M  51.6MB/s   
 
 2026-06-13 08:04:26 (48.2 MB/s) - ‘ords-26.1.2.140.1916.zip’ saved [189626144/189626144]
 
+<a id="slide-70"></a>
 ### Slide 70 - Create ORDS directories
 [root@applicationserver ~]
 ```bash  
@@ -933,10 +1169,12 @@ mkdir -p /var/log/ords/26.1
 <-- Logs (optional)  
 Windows? d:\ords_runtime\26.1, d:\ords_configuration\26.1, d:\ords_document_root\i, d:\ords_logs\26.1
 
+<a id="slide-71"></a>
 ### Slide 71 - Choose an option for APEX static images
 1. Use the Oracle Content Delivery Network
 2. Deploy (and patch) the APEX images directly on your ORDS server
 
+<a id="slide-72"></a>
 ### Slide 72 - Option 1: Use Oracle's content delivery (preferred)
 [oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1/apex/utilities]
 ```bash
@@ -958,6 +1196,7 @@ PL/SQL procedure successfully completed.
 Commit complete.  
 Image Prefix update complete
 
+<a id="slide-73"></a>
 ### Slide 73 - Option 2: Manually maintain apex images
 [root@applicationserver /var/www/html/i]
 ```bash
@@ -974,6 +1213,7 @@ APEX uses /i/ as the default images location, so an i directory in /var/www/html
 
 The \cp (instead of just cp) in the 2nd command stops the prompts for overwriting the files as the root user typically has cp aliased to "cp -i".
 
+<a id="slide-74"></a>
 ### Slide 74 - Create ORDS runtime
 [root@applicationserver /opt/ords/26.1]
 ```bash
@@ -998,6 +1238,7 @@ drwxr-xr-x 4 root root        38 May 20 12:20 scripts
 -rw-r--r-- 1 root root       365 May 20 18:43 THIRD-PARTY-LICENSES.txt
 ```
 
+<a id="slide-75"></a>
 ### Slide 75 - ORDS runtime details
 [root@applicationserver /opt/ords/26.1]
 ```bash
@@ -1027,6 +1268,7 @@ scripts
     └── ords_migrate_workspace_rest.sql
 ```
 
+<a id="slide-76"></a>
 ### Slide 76 - Create ORDS Instance
 [root@applicationserver /opt/ords/26.1/bin]
 ```bash
@@ -1053,6 +1295,7 @@ Oracle REST Data Services - Interactive Install
 Retrieving information.  
 ORDS is not installed in the database. ORDS installation is required.
 
+<a id="slide-77"></a>
 ### Slide 77 - Create ORDS Instance (continued)
 ```text
   Enter a number to update the value or select option A to Accept and Continue
@@ -1070,6 +1313,7 @@ ORDS is not installed in the database. ORDS installation is required.
     [Q] Quit - Do not proceed. No changes
   Choose [A]:
 ```
+<a id="slide-78"></a>
 ### Slide 78 - Create ORDS Instance (continued)
 ```text
   Enter a number to update the value or select option A to Accept and Continue
@@ -1089,6 +1333,7 @@ ORDS is not installed in the database. ORDS installation is required.
     [Q] Quit - Do not proceed. No changes
   Choose [A]: A
 ```
+<a id="slide-79"></a>
 ### Slide 79 - ORDS is now running
 ```text
 The setting named: db.connectionType was set to: basic in configuration: default
@@ -1155,6 +1400,7 @@ Oracle REST Data Services server info: jetty/12.0.34
 Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM  (build 21.0.10+8-LTS-217 mixed mode, sharing)
 ```
 
+<a id="slide-80"></a>
 ### Slide 80 - What happened in our configuration directory
 [root@applicationserver ~]
 ```bash
@@ -1173,6 +1419,7 @@ tree /etc/ords/orcl/26.1
         ├── self-signed.key   <-- Generated self-signed certificate key  
         └── self-signed.pem   <-- Generated self-signed certificate  
 ```
+<a id="slide-81"></a>
 ### Slide 81 - What is in pool.xml?
 [root@applicationserver ~]
 ```bash
@@ -1194,6 +1441,7 @@ cat /etc/ords/orcl/26.1/databases/default/pool.xml
 <entry key="security.requestValidationFunction">ords_util.authorize_plsql_gateway</entry>
 </properties>
 ```
+<a id="slide-82"></a>
 ### Slide 82 - What is in settings.xml?
 [root@applicationserver ~]
 ```bash
@@ -1212,8 +1460,10 @@ cat /etc/ords/orcl/26.1/databases/default/pool.xml
 </properties>
 ```
 
+<a id="slide-83"></a>
 ### Slide 83 - ORDS works!
 
+<a id="slide-84"></a>
 ### Slide 84 - Create an APEX admin user and password
 [oracle@databaseserver DB:my19con /usr/local/src/oracle/apex/26.1/apex]
 ```bash
@@ -1239,10 +1489,13 @@ Created instance administrator ADMIN.
 
 SYS@orcl AS SYSDBA> exit
 ```
+<a id="slide-85"></a>
 ### Slide 85 - Login to APEX
 
+<a id="slide-86"></a>
 ### Slide 86 - Success!
 
+<a id="slide-87"></a>
 ### Slide 87 - Service URLs
 ORDS Landing Page  
    https://yourserver.com  
@@ -1253,6 +1506,7 @@ Oracle SQL Developer Web (né Oracle Database Actions)
 REST Enabled Database Services  
    https://yourserver.com/ords/bookstore/api/catalog  
 
+<a id="slide-88"></a>
 ### Slide 88 - Cool/Good URLs
 In 1998 Sir Tim Berners Lee wrote about what makes a cool URL.*  
 Literally nothing has changed about good URLs since then.  
@@ -1262,6 +1516,7 @@ https://www.w3.org/Provider/Style/URI
 
 *At the time, there was confusion about URI vs. URL, and there still is… see https://danielmiessler.com/study/difference-between-uri-url/ for details if you are curious.
 
+<a id="slide-89"></a>
 ### Slide 89 - Default service URLs are bad according to Sir Tim
 Oracle APEX  
    https://yourserver.com/ords/apex  
@@ -1270,6 +1525,7 @@ Oracle SQL Developer Web (né Oracle Database Actions)
 REST Enabled Database Services  
    https://yourserver.com/ords/bookstore/api/catalog  
 
+<a id="slide-90"></a>
 ### Slide 90 - Let’s fix those URLs…
 Oracle APEX  
    https://yourserver.com/app/apex  
@@ -1278,6 +1534,7 @@ Oracle SQL Developer Web (né Oracle Database Actions)
 REST Enabled Database Services  
    https://yourserver.com/app/bookstore/api/catalog  
 
+<a id="slide-91"></a>
 ### Slide 91 - …and other things with poor defaults
 2026-06-13T16:16:07.387Z INFO        HTTP and HTTP/2 cleartext listening on host: 0.0.0.0 port: 8080  
 standalone.doc.root=/etc/ords/orcl/26.1/global/doc_root  
@@ -1286,6 +1543,7 @@ standalone.doc.root=/etc/ords/orcl/26.1/global/doc_root
   /ords/                              => default                        => VALID
 
 
+<a id="slide-92"></a>
 ### Slide 92 - Stop ORDS Instance
 ```text
 2026-06-13T16:16:08.919Z WARNING     *** jdbc.MaxLimit in configuration |default|lo| is using a value of 10, this setting may not be sized adequately for a production environment ***
@@ -1303,6 +1561,7 @@ Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM  (build 2
 ```
 ^C <-- Ctrl-c to kill the running process
 
+<a id="slide-93"></a>
 ### Slide 93 - Configure ords settings
 [root@applicationserver /opt/ords/26.1/bin]
 ```bash
@@ -1341,6 +1600,7 @@ The global setting named: standalone.doc.root was set to: /var/www/html
 ```bash
 ./ords --config /etc/ords/orcl/26.1 config set standalone.access.log.retainDays 5
 ```
+<a id="slide-94"></a>
 ### Slide 94 - Configure ords directories to be more maintainable
 Today  
 [root@applicationserver /opt/ords]
@@ -1376,6 +1636,7 @@ unlink latest
 ```bash
 ln -s 26.1 latest
 ```
+<a id="slide-95"></a>
 ### Slide 95 - Restart and monitor ORDS
 [root@applicationserver ~]
 ```bash
@@ -1394,8 +1655,10 @@ Mapped local pools from /etc/ords/orcl/latest/databases:
 Oracle REST Data Services version : 25.3.0.r1001652
 Oracle REST Data Services server info: jetty/12.0.13
 ```
+<a id="slide-96"></a>
 ### Slide 96 - It works!
 
+<a id="slide-97"></a>
 ### Slide 97 - What schemas changes after APEX & ORDS are installed?
 SYS@orcl AS SYSDBA > 
   2  select username
@@ -1429,6 +1692,7 @@ Two new locked accounts:
 APEX_260100  
 FLOWS_FILES
 
+<a id="slide-98"></a>
 ### Slide 98 - What components do you have after APEX & ORDS are installed?
 SYS@orcl AS SYSDBA >
 ```sql 
@@ -1460,6 +1724,7 @@ order by comp_name;
 
 Still 1 new component, ORDS isn’t a component
 
+<a id="slide-99"></a>
 ### Slide 99 - How many public synonyms after APEX & ORDS are installed?
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -1472,6 +1737,7 @@ ________________________
 
 779 new public synonyms
 
+<a id="slide-100"></a>
 ### Slide 100 - Tablespaces after APEX & ORDS are installed
 
 SYS@orcl AS SYSDBA > 
@@ -1507,11 +1773,14 @@ SYS@orcl AS SYSDBA >
 About 700 new Allocated MB
  and about 671 new Used MB
 
+<a id="slide-101"></a>
 ### Slide 101 - 03 Enable Access Into The Database (Optional)
 Let developers use APEX to build and deploy web applications, build REST services, and also **enable SQL Developer Web**
 
+<a id="slide-102"></a>
 ### Slide 102 - SQL Developer Web
 
+<a id="slide-103"></a>
 ### Slide 103 - First REST enable schemas
 SYS@orcl AS SYSDBA> 
 ```sql
@@ -1544,6 +1813,7 @@ exec ords_admin.enable_schema(p_schema => 'bob', p_url_mapping_pattern => 'coolg
 ```
 PL/SQL procedure successfully completed.
 
+<a id="slide-104"></a>
 ### Slide 104 - What does the database tell us about rest schemas?
 SYS@orcl AS SYSDBA > 
 ```sql
@@ -1559,14 +1829,19 @@ select parsing_schema
 | RICH           | ENABLED | BASE_PATH | rich    |
 | BOB            | ENABLED | BASE_PATH | coolguy |
 
+<a id="slide-105"></a>
 ### Slide 105 - Logging in...
 
+<a id="slide-106"></a>
 ### Slide 106 - Sweet stuff!
 
+<a id="slide-107"></a>
 ### Slide 107 - Sweet stuff!
 
+<a id="slide-108"></a>
 ### Slide 108 - Sweet stuff!
 
+<a id="slide-109"></a>
 ### Slide 109 - AGENDA
 We have covered three main topics:
 
@@ -1575,15 +1850,19 @@ We have covered three main topics:
 02 Reach Out Of The Database (Optional)  
 03 Enable Access Into The Database (Optional)  
 
+<a id="slide-110"></a>
 ### Slide 110 - Conclusion - hidden
 
+<a id="slide-111"></a>
 ### Slide 111 - In Conclusion:
 DBAs and System Admins should deliver APEX and ORDS for every database
 
 
+<a id="slide-112"></a>
 ### Slide 112 - The most important slide
 https://github.com/RichardSoule/APEXandORDSforDBASandSysadmins
 
+<a id="slide-113"></a>
 ### Slide 113 - Thanks
 Rich
 Soule
@@ -1591,6 +1870,7 @@ richard.soule@talan.com
 
 ### Slide 114 Appendix - hidden
 
+<a id="slide-115"></a>
 ### Slide 115 - 19.17 or earlier databases need a TLS Wallet for HTTPS
 SYS@orcl AS SYSDBA> 
 ```sql
@@ -1615,19 +1895,23 @@ ORA-06512: at "APEX_240200.WWV_FLOW_WEB_SERVICES", line 641
 ORA-06512: at "APEX_240200.WWV_FLOW_WEBSERVICES_API", line 661
 ORA-06512: at line 1
 ```
+<a id="slide-116"></a>
 ### Slide 116 - No title
 
 "My developers & application also need to reach TLS protected URLs from our 19c (or earlier?) database"
 
+<a id="slide-117"></a>
 ### Slide 117 - You need a TLS wallet!
 TLS wallet? Don’t you mean SSL wallet?
 
+<a id="slide-118"></a>
 ### Slide 118 - You need a TLS wallet!
 TLS wallet? Don’t you mean SSL wallet?  
                  =  
 Car? Don’t you mean horseless carriage?  
 We’ve been using TLS since the late 1990s.
 
+<a id="slide-119"></a>
 ### Slide 119 - What is a TLS wallet?
 A TLS wallet lives in a directory and contains an ewallet.p12 file and optionally, a cwallet.sso file.  
 ewallet.p12 file contains trusted certificates *  
@@ -1635,6 +1919,7 @@ cwallet.sso file contains an encrypted password that allows you and the database
 
 \* With other types of wallets, these files can hold different things. Don’t mix your wallets together!
 
+<a id="slide-120"></a>
 ### Slide 120 - Aside: Other types of wallets you say?
 - xdb_wallet  
     Automatically created by Oracle for each database that you create. Used by XML DB listener (that we don’t really use anymore).
@@ -1648,6 +1933,7 @@ cwallet.sso file contains an encrypted password that allows you and the database
 I use the above as the actual names for my wallets.  
 Again: Don’t mix your wallets together!
 
+<a id="slide-121"></a>
 ### Slide 121 - Create a TLS wallet (not needed on 23ai or higher!)
 [oracle@databaseserver DB:my19con ~]
 ```bash
@@ -1680,6 +1966,7 @@ ls
 ```
 cwallet.sso  ewallet.p12
 
+<a id="slide-122"></a>
 ### Slide 122 - Configure APEX tls wallet location
 SYS@orcl AS SYSDBA>
 ```sql
@@ -1696,11 +1983,17 @@ Commit complete.
 
 Or you can use the APEX Admin UI, but we have yet to set that up.
 
+<a id="slide-123"></a>
 ### Slide 123 - Get a root certificate to add to the wallet
+<a id="slide-124"></a>
 ### Slide 124 - Get a root certificate to add to the wallet
+<a id="slide-125"></a>
 ### Slide 125 - Get a root certificate to add to the wallet
+<a id="slide-126"></a>
 ### Slide 126 - Get a root certificate to add to the wallet
+<a id="slide-127"></a>
 ### Slide 127 - Get a root certificate to add to the wallet
+<a id="slide-128"></a>
 ### Slide 128 - Get a root certificate to add to the wallet
 ```text
 -----BEGIN CERTIFICATE-----
@@ -1736,6 +2029,7 @@ bP6MvPJwNQzcmRk13NfIRmPVNnGuV/u3gm3c
 -----END CERTIFICATE-----
 ```
 
+<a id="slide-129"></a>
 ### Slide 129 - Add a root certificate to the TLS wallet
 [oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
 ```bash
@@ -1761,6 +2055,7 @@ Subject:        CN=GTS Root R1,O=Google Trust Services LLC,C=US
 
 Password to put cert into the wallet, no password to read the wallet.
 
+<a id="slide-130"></a>
 ### Slide 130 - https requests now work in 19c too!
 SYS@orcl AS SYSDBA> 
 ```sql
@@ -1782,6 +2077,7 @@ exec utl_http.set_wallet('system:');
 
 SR 3-42740668211 : BUG: apex_instance_admin.set_parameter doesn't allow "system:" as a wallet path in Oracle 19.18+
 
+<a id="slide-131"></a>
 ### Slide 131 - Add a self signed cert to the TLS wallet
 19.17 or earlier
 [oracle@databaseserver DB:my19con /u01/app/oracle/admin/my19con/tls_wallet]
@@ -1803,6 +2099,7 @@ cp self_signed_cert.crt /etc/pki/ca-trust/source/anchors/
 update-ca-trust
 ```
 
+<a id="slide-132"></a>
 ### Slide 132 - AGENDA
 We have covered three main topics:  
 There are also three bonus topics that we won’t have time to cover but are included as references for you:
@@ -1815,10 +2112,13 @@ There are also three bonus topics that we won’t have time to cover but are inc
 05 Bonus 2: Create A systemd Service (Optional)  
 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)
 
+<a id="slide-133"></a>
 ### Slide 133 - Solution #4 - hidden
 
+<a id="slide-134"></a>
 ### Slide 134 - Bonus 1: Create APEX Resource Plan (Optional)
 
+<a id="slide-135"></a>
 ## Slide 135 - Pluggable default resource plan during the day
 SYS@orcl AS SYSDBA> 
 ```sql
@@ -1828,6 +2128,7 @@ show parameter resource_manager_plan
 |-----------------------|--------|-------|
 | resource_manager_plan | string |       |
 
+<a id="slide-136"></a>
 ### Slide 136 - Pluggable default plan during nights & weekends
 SYS@orcl AS SYSDBA>
 ```sql 
@@ -1840,13 +2141,18 @@ show parameter resource_manager_plan
 Monday through Friday: 10 pm to 2 am  
 Saturday and Sunday: 6 am to 2 am
 
+<a id="slide-137"></a>
 ### Slide 137 - Default Resource Manager Plans
 INTERNAL_PLAN = Days  
 DEFAULT_MAINTENANCE_PLAN = Nights and Weekends
 
+<a id="slide-138"></a>
 ### Slide 138 - Let’s make a new plan!
+<a id="slide-139"></a>
 ### Slide 139 - Let’s make a new plan!
+<a id="slide-140"></a>
 ### Slide 140 - Let’s make a new plan!
+<a id="slide-141"></a>
 ### Slide 141 - Let’s make a new plan!
 ### Slide 142 through 145- Let’s make a new plan!
 The below code block appears on slides 142 through 145
@@ -1948,6 +2254,7 @@ end;
 -- Set the new plan as the active plan
 alter system set resource_manager_plan = 'APEX_RATIO_PLAN' comment= '2026-16-15 Rich Soule (512.289.4020) Created and implemented a new plan' scope=both;
 ```
+<a id="slide-146"></a>
 ### Slide 146 - What happened to our APEX & ORDS schemas?
 SYS@orcl AS SYSDBA> 
 ```sql
@@ -1974,10 +2281,13 @@ order by username;
 | ORDS_METADATA      | OPEN           |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | NONE                | N                 |
 | ORDS_PUBLIC_USER   | OPEN           |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | PASSWORD            | N                 |
 
+<a id="slide-147"></a>
 ### Slide 147 - Solution #5 - hidden
 
+<a id="slide-148"></a>
 ### Slide 148 - 05 Bonus 2: Create A systemd Service (Optional)
 
+<a id="slide-149"></a>
 ### Slide 149 - Stop ORDS we ran with nohup
 [root@applicationserver ~]
 ```bash
@@ -2003,6 +2313,7 @@ kill 2263625
                 /var/log/ords/26.1/ords-serve.log 2>&1
 
 
+<a id="slide-150"></a>
 ### Slide 150 - Create ORDS service
 [root@applicationserver /etc/systemd/system]
 ```bash
@@ -2029,6 +2340,7 @@ TimeoutStopSec=30
 WantedBy=multi-user.target
 ```
 
+<a id="slide-151"></a>
 ### Slide 151 - Enable & start ORDS service
 [root@applicationserver ~]
 ```bash
@@ -2049,6 +2361,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/ords.service → /et
 systemctl start ords
 ```
 
+<a id="slide-152"></a>
 ### Slide 152 - Manage ORDS service - Status
 [root@applicationserver ~]
 ```bash
@@ -2076,6 +2389,7 @@ Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Dat
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
 Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit
 ```
+<a id="slide-153"></a>
 ### Slide 153 - Manage ORDS service – Read logs & stop
 [root@applicationserver ~]
 ```bash
@@ -2106,10 +2420,13 @@ Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Dat
 systemctl stop ords
 ```
 
+<a id="slide-154"></a>
 ### Slide 154 - Solution #6 - hidden
 
+<a id="slide-155"></a>
 ### Slide 155 - 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)
 
+<a id="slide-156"></a>
 ### Slide 156 - Where should ords be deployed?
 It doesn't *really* * matter.
 
@@ -2119,14 +2436,17 @@ Many thousands of deployments on application servers deployed to Tomcat or WebLo
 
 \* If you are building Facebook, then it matters. But you are not building Facebook.
 
+<a id="slide-157"></a>
 ### Slide 157 - 
 “I don’t want to run
 ORDS standalone as root, 
 that’s not secure”
 
+<a id="slide-158"></a>
 ### Slide 158 - ORDS deployment: Who?
 "I don't want to run ORDS standalone as root, that's not secure."
 
+<a id="slide-159"></a>
 ### Slide 159 - Create ords os user & change file ownership
 [root@applicationserver ~]
 ```bash
@@ -2148,6 +2468,7 @@ chown –R ords:ords /opt/ords
 ```bash
 chown –R ords:ords /var/log/ords
 ```
+<a id="slide-160"></a>
 ### Slide 160 - Modify ords systemd service to use ords os user
 [root@applicationserver ~]
 ```bash
@@ -2178,6 +2499,7 @@ TimeoutStopSec=30
 [Install]
 WantedBy=multi-user.target
 ```
+<a id="slide-161"></a>
 ### Slide 161 - Create firewalld ORDS service
 [root@applicationserver ~]
 ```bash
@@ -2208,6 +2530,7 @@ firewall-cmd --permanent --add-service ords
 success
 ```
 
+<a id="slide-162"></a>
 ### Slide 162 - Create firewalld forward from 443 to 8080
 [root@applicationserver ~]
 ```bash
@@ -2229,6 +2552,7 @@ firewall-cmd --runtime-to-permanent
 ```
 success
 
+<a id="slide-163"></a>
 ### Slide 163 - Update the port that ORDS uses
 [root@applicationserver /opt/ords/26.1/bin]
 ```bash
@@ -2242,6 +2566,7 @@ Configuration:
 The global setting named: standalone.https.port was set to: 8080
 ```
 
+<a id="slide-164"></a>
 ### Slide 164 - Secure the ords account & restart ords
 [root@applicationserver ~]
 ```bash
@@ -2267,9 +2592,11 @@ systemctl daemon-reload
 systemctl start ords
 ```
 
-Slide 164 - ORDS works!
+<a id="slide-165"></a>
+### Slide 165 - ORDS works!
 
-Slide 165 - AGENDA
+<a id="slide-166"></a>
+### Slide 166 - AGENDA
 We are going to cover three main topics:
 There are also three bonus topics that we just covered!
 00 The Pre-APEX Database
@@ -2280,13 +2607,11 @@ There are also three bonus topics that we just covered!
 05 Bonus 2: Create A systemd Service (Optional)
 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)
 
-Slide 166 - The most important slide
+<a id="slide-167"></a>
+### Slide 167 - The most important slide
 https://github.com/RichardSoule/APEXandORDSforDBASandSysadmins
 
-Slide 167 - Thanks
+<a id="slide-168"></a>
+### Slide 168 - Thanks
 Rich Soule
-(512) 289-4020
 richard.soule@talan.com
-
-Slide 168 - ODTUG Kscope25 closing slide (This slide was removed for ECOUG)
-Don't Forget To Fill Out Your Evals
