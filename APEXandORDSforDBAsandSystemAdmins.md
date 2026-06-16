@@ -1379,7 +1379,7 @@ ln -s 26.1 latest
 ### Slide 95 - Restart and monitor ORDS
 [root@applicationserver ~]
 ```bash
-nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> /var/log/ords/orcl/26.1/ords-serve.log 2>&1 &
+nohup /opt/ords/latest/bin/ords --config /etc/ords/orcl/latest serve >> /var/log/ords/orcl/26.1/ords-serve.log 2>&1 &
 ```
 [1] 2263594
 
@@ -1388,7 +1388,7 @@ nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> /var/log/ords
 tail -f /var/log/ords/orcl/26.1/ords-serve.log
 ```
 ```text
-Mapped local pools from /etc/ords/latest/databases:
+Mapped local pools from /etc/ords/orcl/latest/databases:
   /app/                               => default                        => VALID
 2025-10-15T17:08:43.508Z INFO        Oracle REST Data Services initialized
 Oracle REST Data Services version : 25.3.0.r1001652
@@ -1833,27 +1833,24 @@ SYS@orcl AS SYSDBA>
 ```sql 
 show parameter resource_manager_plan
 ```
-NAME                                 TYPE        VALUE
------------------------------------- ----------- ------------------------------------------
-resource_manager_plan                string      SCHEDULER[0x4F87]:DEFAULT_MAINTENANCE_PLAN
+| NAME                  | TYPE   | VALUE                                      |
+|-----------------------|--------|--------------------------------------------|
+| resource_manager_plan | string | SCHEDULER[0x4F87]:DEFAULT_MAINTENANCE_PLAN |
 
-Monday through Friday: 10 pm to 2 am
+Monday through Friday: 10 pm to 2 am  
 Saturday and Sunday: 6 am to 2 am
 
-Slide 136 - Default Resource Manager Plans
+### Slide 137 - Default Resource Manager Plans
 INTERNAL_PLAN = Days  
 DEFAULT_MAINTENANCE_PLAN = Nights and Weekends
 
-Slide 137 - Let’s make a new plan!
-Slide 138 - Let’s make a new plan!
-Slide 139 - Let’s make a new plan!
-Slide 140 - Let’s make a new plan!
-
-Slide 141 - Let’s make a new plan! 
-Slide 142 - Let’s make a new plan!
-Slide 143 - Let’s make a new plan!
-Slide 144 - Let’s make a new plan!
-The below code block appears on slides 141 through 144
+### Slide 138 - Let’s make a new plan!
+### Slide 139 - Let’s make a new plan!
+### Slide 140 - Let’s make a new plan!
+### Slide 141 - Let’s make a new plan!
+### Slide 142 through 145- Let’s make a new plan!
+The below code block appears on slides 142 through 145
+```sql
    -- Create Consumer Groups
 begin
    dbms_resource_manager.clear_pending_area;
@@ -1949,10 +1946,11 @@ end;
 /
   
 -- Set the new plan as the active plan
-alter system set resource_manager_plan = 'APEX_RATIO_PLAN' comment= '2025-10-15 Rich Soule (512.289.4020) Created and implemented a new plan' scope=both;
-
-Slide 145 - What happened to our APEX & ORDS schemas?
+alter system set resource_manager_plan = 'APEX_RATIO_PLAN' comment= '2026-16-15 Rich Soule (512.289.4020) Created and implemented a new plan' scope=both;
+```
+### Slide 146 - What happened to our APEX & ORDS schemas?
 SYS@orcl AS SYSDBA> 
+```sql
   select username
        , account_status
        , expiry_date
@@ -1966,24 +1964,26 @@ SYS@orcl AS SYSDBA>
       or username like 'ORDS\_%' escape '\'
       or username like 'FLOWS%'
 order by username;
+```
+| USERNAME           | ACCOUNT_STATUS | EXPIRY_DATE | DEFAULT_TABLESPACE | PROFILE | INITIAL_RSRC_CONSUMER_GROUP | AUTHENTICATION_TYPE | ORACLE_MAINTAINED |
+|--------------------|----------------|-------------|--------------------|---------|-----------------------------|---------------------|-------------------|
+| APEX_260100        | LOCKED         |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | NONE                | Y                 |
+| APEX_PUBLIC_ROUTER | OPEN           |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | NONE                | Y                 |
+| APEX_PUBLIC_USER   | OPEN           |             | SYSAUX             | DEFAULT | APEX_HIGH                   | NONE                | Y                 |
+| FLOWS_FILES        | LOCKED         |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | NONE                | Y                 |
+| ORDS_METADATA      | OPEN           |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | NONE                | N                 |
+| ORDS_PUBLIC_USER   | OPEN           |             | SYSAUX             | DEFAULT | DEFAULT_CONSUMER_GROUP      | PASSWORD            | N                 |
 
-USERNAME              ACCOUNT_STATUS    EXPIRY_DATE    DEFAULT_TABLESPACE    PROFILE    INITIAL_RSRC_CONSUMER_GROUP    AUTHENTICATION_TYPE    ORACLE_MAINTAINED
-_____________________ _________________ ______________ _____________________ __________ ______________________________ ______________________ ____________________
-APEX_240200           LOCKED                           SYSAUX                DEFAULT    DEFAULT_CONSUMER_GROUP         NONE                   Y
-APEX_PUBLIC_ROUTER    OPEN                             SYSAUX                DEFAULT    DEFAULT_CONSUMER_GROUP         NONE                   Y
-APEX_PUBLIC_USER      OPEN                             SYSAUX                DEFAULT    APEX_HIGH                      PASSWORD               Y
-FLOWS_FILES           LOCKED                           SYSAUX                DEFAULT    DEFAULT_CONSUMER_GROUP         NONE                   Y
-ORDS_METADATA         OPEN                             SYSAUX                DEFAULT    DEFAULT_CONSUMER_GROUP         NONE                   N
-ORDS_PUBLIC_USER      OPEN                             SYSAUX                DEFAULT    DEFAULT_CONSUMER_GROUP         PASSWORD               N
-6 rows selected.
+### Slide 147 - Solution #5 - hidden
 
-Slide 146 - hidden - Solution #5
+### Slide 148 - 05 Bonus 2: Create A systemd Service (Optional)
 
-Slide 147 - 05 Bonus 2: Create A systemd Service (Optional)
-
-Slide 148 - Stop ORDS we ran with nohup
+### Slide 149 - Stop ORDS we ran with nohup
 [root@applicationserver ~]
+```bash
 ps -ef | grep ords | grep -v grep
+```
+```text
 root     2263594 2186386  0 19:36 pts/3    00:00:00 /bin/bash /opt/ords/latest/bin/ords --config 
                                                     /etc/ords/latest serve
 root     2263625 2263594 27 19:36 pts/3    00:00:17 java -Doracle.dbtools.cmdline.home=/opt/ords/latest 
@@ -1994,136 +1994,170 @@ root     2263625 2263594 27 19:36 pts/3    00:00:17 java -Doracle.dbtools.cmdlin
                                                     -Duser.timezone=UTC -XX:+IgnoreUnrecognizedVMOptions 
                                                     -jar /opt/ords/latest/ords.war --config 
                                                     /etc/ords/latest serve
+```
 [root@applicationserver ~]
+```bash
 kill 2263625
-[1]+  Exit 143  nohup /opt/ords/latest/bin/ords --config /etc/ords/latest serve >> 
+```
+[1]+  Exit 143  nohup /opt/ords/latest/bin/ords --config /etc/ords/orcl/latest serve >> 
                 /var/log/ords/26.1/ords-serve.log 2>&1
 
 
-Slide 149 - Create ORDS service
+### Slide 150 - Create ORDS service
 [root@applicationserver /etc/systemd/system]
-# vim ords.service
+```bash
+vim ords.service
+```
+```text
 [Unit]
 Description=Oracle REST Data Services
 Requires=network.target
 
 [Service]
 Type=simple
-Environment="JAVA_OPTS=-Dorg.eclipse.jetty.server.Request.maxFormContentSize=3000000 -Xms1024M -Xmx1024M“
-ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/latest serve
+ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/orcl/latest serve
 ExecStop=/usr/bin/kill -HUP ${MAINPID}
 User=root
 
 SyslogIdentifier=ords
 Restart=always
 RestartSec=30
-TimeoutStartSec=30
+TimeoutStartSec=240
 TimeoutStopSec=30
 
 [Install]
 WantedBy=multi-user.target
+```
 
-Slide 150 - Enable & start ORDS service
-systemctl daemon-reload   <-- Tell systemd there is a new service to manage
+### Slide 151 - Enable & start ORDS service
+[root@applicationserver ~]
+```bash
+systemctl daemon-reload
+```
+<-- Tell systemd there is a new service to manage
 
 [root@applicationserver ~]
-systemctl enable ords     <-- Start ORDS on server reboot (optional)
+```bash
+systemctl enable ords
+```
+<-- Start ORDS on server reboot (optional)  
+
 Created symlink /etc/systemd/system/multi-user.target.wants/ords.service → /etc/systemd/system/ords.service.
 
 [root@applicationserver ~]
+```bash
 systemctl start ords
+```
 
-Slide 151 - Manage ORDS service - Status
+### Slide 152 - Manage ORDS service - Status
 [root@applicationserver ~]
+```bash
 systemctl status ords
-
+```
+```text
 ● ords.service - Oracle REST Data Services
    Loaded: loaded (/etc/systemd/system/ords.service; enabled; vendor preset: disabled)
-   Active: active (running) since Wed 2025-05-28 20:00:02 EDT; 2min 51s ago
+   Active: active (running) since Wed 2026-06-28 20:00:02 EDT; 2min 51s ago
  Main PID: 2265631 (ords)
     Tasks: 49 (limit: 100445)
    Memory: 617.7M
    CGroup: /system.slice/ords.service
-           ├─2265631 /bin/bash /opt/ords/latest/bin/ords --config /etc/ords/latest serve
+           ├─2265631 /bin/bash /opt/ords/latest/bin/ords --config /etc/ords/orcl/latest serve
            └─2265662 java -Doracle.dbtools.cmdline.home=/opt/ords/latest -Duser.language=en
 
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: db.connectionType=basic
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.class.version=64.0
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log=/var/log/ords/26.1
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: 2025-05-29T00:00:09.324Z INFO
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Mapped local pools from /etc/ords/latest/databases:
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]:   /app/                               => default
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: 2025-05-29T00:00:09.486Z INFO  Oracle REST Data Services
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Oracle REST Data Services version : 25.3.0.r1001652
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit
-
-Slide 152 - Manage ORDS service – Read logs & stop
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: db.connectionType=basic
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: java.class.version=64.0
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: standalone.access.log=/var/log/ords/26.1
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:00:09.324Z INFO
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Mapped local pools from /etc/ords/orcl/latest/databases:
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]:   /app/                               => default
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:00:09.486Z INFO  Oracle REST Data Services
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services version : 25.3.0.r1001652
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit
+```
+### Slide 153 - Manage ORDS service – Read logs & stop
 [root@applicationserver ~]
+```bash
 journalctl -u ords
-
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.vendor=Oracle Corporation
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.vm.info=mixed mode, sharing
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: stderr.encoding=UTF-8
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.vm.version=20.0.1+9-29
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log.retainDays=5
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: sun.io.unicode.encoding=UnicodeLittle
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: jdbc.InitialLimit=21
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: db.connectionType=basic
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: java.class.version=64.0
-Oct 15 20:00:08 ora-rhel8.broadinstitute.org ords[2265662]: standalone.access.log=/var/log/ords/26.1
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: 2025-05-29T00:00:09.324Z INFO
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Mapped local pools from /etc/ords/latest/databases:
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]:   /app/                               => default                       
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: 2025-05-29T00:00:09.486Z INFO        Oracle REST Data Services initiali
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Oracle REST Data Services version : 25.3.0.r1001652
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
-Oct 15 20:00:09 ora-rhel8.broadinstitute.org ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM
-
+```
+```text
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: java.vendor=Oracle Corporation
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: java.vm.info=mixed mode, sharing
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: stderr.encoding=UTF-8
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: java.vm.version=20.0.1+9-29
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: standalone.access.log.retainDays=5
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: sun.io.unicode.encoding=UnicodeLittle
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: jdbc.InitialLimit=21
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: db.connectionType=basic
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: java.class.version=64.0
+Jun 15 20:00:08 applicationserver.my-apex-box.com ords[2265662]: standalone.access.log=/var/log/ords/26.1
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:00:09.324Z INFO
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Mapped local pools from /etc/ords/orcl/latest/databases:
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]:   /app/                               => default                       
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: 2026-06-29T00:00:09.486Z INFO        Oracle REST Data Services initiali
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services version : 25.3.0.r1001652
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services server info: jetty/12.0.13
+Jun 15 20:00:09 applicationserver.my-apex-box.com ords[2265662]: Oracle REST Data Services java info: Java HotSpot(TM) 64-Bit Server VM
+```
 [root@applicationserver ~]
+```bash
 systemctl stop ords
+```
 
-Slide 153 - hidden - Solution #6
+### Slide 154 - Solution #6 - hidden
 
-Slide 154 - 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)
+### Slide 155 - 06 Bonus 3: Run ORDS As ords Instead Of root (Optional)
 
-Slide 155 - Where should ords be deployed?
-Many thousands of deployments directly on database servers as either the root user or the oracle user.
-Many thousands of deployments on web or application servers as the root user, or maybe another user using ORDS standalone.
-Many thousands of deployments on application servers deployed to Tomcat or WebLogic.
-* If you are building Facebook, then it matters. But you are not building Facebook.
+### Slide 156 - Where should ords be deployed?
+It doesn't *really* * matter.
 
-Slide 156 - 
+Many thousands of deployments directly on database servers as either the root user or the oracle user.  
+Many thousands of deployments on web or application servers as the root user, **or maybe another user using ORDS standalone**.  
+Many thousands of deployments on application servers deployed to Tomcat or WebLogic.  
+
+\* If you are building Facebook, then it matters. But you are not building Facebook.
+
+### Slide 157 - 
 “I don’t want to run
 ORDS standalone as root, 
 that’s not secure”
 
-Slide 157 - ORDS deployment: Who?
+### Slide 158 - ORDS deployment: Who?
 "I don't want to run ORDS standalone as root, that's not secure."
 
-Slide 158 - Create ords os user & change file ownership
+### Slide 159 - Create ords os user & change file ownership
 [root@applicationserver ~]
+```bash
 systemctl stop ords
-
+```
 [root@applicationserver ~]
+```bash
 useradd ords
-
+```
 [root@applicationserver ~]
+```bash
 chown –R ords:ords /etc/ords
-
+```
 [root@applicationserver ~]
+```bash
 chown –R ords:ords /opt/ords
-
+```
 [root@applicationserver ~]
+```bash
 chown –R ords:ords /var/log/ords
-
-Slide 159 - Modify ords systemd service to use ords os user
+```
+### Slide 160 - Modify ords systemd service to use ords os user
 [root@applicationserver ~]
+```bash
 vim /etc/systemd/system/ords.service
-
+```
 [root@applicationserver ~]
+```bash
 cat /etc/systemd/system/ords.service
+```
+```text
 [Unit]
 Description=Oracle REST Data Services
 Requires=network.target
@@ -2131,7 +2165,7 @@ Requires=network.target
 [Service]
 Type=simple
 Environment="JAVA_OPTS=-Dorg.eclipse.jetty.server.Request.maxFormContentSize=3000000 -Xms1024M -Xmx1024M“
-ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/latest serve
+ExecStart=/opt/ords/latest/bin/ords --config /etc/ords/orcl/latest serve
 ExecStop=/usr/bin/kill -HUP ${MAINPID}
 User=ords
 
@@ -2143,14 +2177,17 @@ TimeoutStopSec=30
 
 [Install]
 WantedBy=multi-user.target
-
-Slide 160 - Create firewalld ORDS service
+```
+### Slide 161 - Create firewalld ORDS service
 [root@applicationserver ~]
+```bash
 vim /etc/firewalld/services/ords.xml
-
+```
 [root@applicationserver ~]
+```bash
 cat /etc/firewalld/services/ords.xml
-
+```
+```text
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>ORDS</short>
@@ -2158,51 +2195,77 @@ cat /etc/firewalld/services/ords.xml
   <port protocol="tcp" port="443"/>
   <port protocol="tcp" port="8080"/>
 </service>
+```
+[root@applicationserver ~]
+```bash
+systemctl start firewalld
+```
+<-- If firewalld isn’t running yet
 
 [root@applicationserver ~]
-systemctl start firewalld <-- If firewalld isn’t running yet
-
-[root@applicationserver ~]
+```bash
 firewall-cmd --permanent --add-service ords
 success
+```
 
-Slide 161 - Create firewalld forward from 443 to 8080
+### Slide 162 - Create firewalld forward from 443 to 8080
 [root@applicationserver ~]
+```bash
 firewall-cmd --add-forward-port=port=443:proto=tcp:toport=8080
+```
 success
 
 [root@applicationserver ~]
-firewall-cmd --add-masquerade <-- Hide that ORDS will be on port 8080
+```bash
+firewall-cmd --add-masquerade 
+```
+<-- Hide that ORDS will be on port 8080
+
 success
 
 [root@applicationserver ~]
+```bash
 firewall-cmd --runtime-to-permanent
+```
 success
 
-Slide 162 - Update the port that ORDS uses
+### Slide 163 - Update the port that ORDS uses
 [root@applicationserver /opt/ords/26.1/bin]
+```bash
 ./ords --config /etc/ords/orcl/26.1 config set standalone.https.port 8080
-
-ORDS: Release 25.3 Production on Wed Oct 15 21:49:17 2025
+```
+```text
+ORDS: Release 26.1 Production on Sat Jun 13 13:35:07 2026
 Copyright (c) 2010, 2025, Oracle.
 Configuration:
   /etc/ords/orcl/26.1
 The global setting named: standalone.https.port was set to: 8080
+```
 
-Slide 163 - Secure the ords account & restart ords
+### Slide 164 - Secure the ords account & restart ords
 [root@applicationserver ~]
-usermod -s /usr/sbin/nologin ords <-- Your nologin might be somewhere else
+```bash
+usermod -s /usr/sbin/nologin ords
+```
+<-- Your nologin might be somewhere else  
 success
 
 [root@applicationserver ~]
+```bash
 su - ords
+```
 This account is currently not available.
 
 [root@applicationserver ~]
-systemctl daemon-reload    <-- Let systemd know about the User=ords change
+```bash
+systemctl daemon-reload
+```
+<-- Let systemd know about the User=ords change
 
 [root@applicationserver ~]
+```bash
 systemctl start ords
+```
 
 Slide 164 - ORDS works!
 
